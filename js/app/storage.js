@@ -62,8 +62,22 @@ myApp.factory('storage', function() {
                     callback("success");
                 }
             });
+        },
+
+        readUniver : function (callback) {
+            chrome.storage.local.get(["univers"], function(object) {
+                if (chrome.runtime.lastError) {
+                    console.log("univer read error");
+                    callback(null);
+                } else {
+                    console.log("univer read succesful");
+                    var result = object.univers;
+                    callback(result);
+                }
+            });
         }
-    };
+        
+	};
 
   return service;
 });

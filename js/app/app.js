@@ -1,1 +1,1 @@
-var myApp = angular.module('dataExtractorApp', ["ngMessages"]);
+var myApp = angular.module('dataExtractorApp', ["ngMessages", "ngRoute"]);

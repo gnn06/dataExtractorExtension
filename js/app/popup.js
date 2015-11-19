@@ -1,8 +1,16 @@
-
-myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge", function ($scope, $compile, storage, merge) {
+myApp.controller('universCtrl', ["$scope", "storage", function ($scope, storage) {
  
-  $scope.dataSource = "moto";
-  
+  storage.readUniver(function(result) {
+	  if (result != null) {
+		$scope.univers = result;
+		$scope.$apply();
+	  }
+  });  
+}]);
+
+myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge", "$routeParams", function ($scope, $compile, storage, merge, $routeParams) {
+ 
+  $scope.dataSource = $routeParams.univer;
   $scope.items = [];
   
   // -1 permet d'ajouter immÃƒÂ©diatement un item ÃƒÂ  la liste
@@ -116,3 +124,27 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   
 }]);
 
+myApp.config(function($routeProvider, $locationProvider) {
+  $routeProvider
+  .when("/univers/", {
+	templateUrl : "univers.html",
+	controller : "universCtrl"
+  })
+  .when("/univers/:univer", {
+	templateUrl : "index.html",
+	controller : "dataExtractorCtrl"
+  })
+  .otherwise({redirectTo: '/univers/'});
+});
+
+/* needed to make href without unsafe
+ * cf https://stackoverflow.com/questions/15606751/angular-changes-urls-to-unsafe-in-extension-page/15769779#15769779
+ */
+myApp.config( [
+    '$compileProvider',
+    function( $compileProvider )
+    {   
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
+    }
+]);
