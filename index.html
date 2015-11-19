@@ -1,43 +1,48 @@
-	  <a href="#/univers/">Univers</a>
-	  <div id="debug">{{ items.length }}</div>
-	  <form class="form-horizontal">
-	  Current univer : {{ dataSource }}
-	  </form>
-	  
-	  <input id="readbutton"  type="button" value="Read"  ng-click="read()"/>
-	  <input id="writebutton" type="button" value="Write" ng-click="write()"/>
-	  <span id="IOmessage">{{ IOmessage}} </span></br>
-	  
-	  <ul>
-		  <!-- tracking neeeded to make add working -->
-		  <li ng-repeat="item in items track by item.url">{{ item.url | limitTo : 12 : 11 }} {{ item.title }} 
-			  <a href ng-click="view($index)" >json</a>		
-			  <a href="{{ item.url }}" target="_blank"><i class="icon-globe"></i></a>
-			  <a href ng-click="delete($index)" ><i class="icon-trash"></i></a>
-		  </li>
-	  </ul>
-	  
-	  <input id="extractbutton" type="button" value="Extract" ng-click="extract()" />
-	  
-	  JSON : <span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
-			  <span ng-message="id">An id is required</span>
-			 </span>
-			 <br/>
-			 
-	  <form name="myForm" novalidate>
-		  <textarea type="textarea" name="jsonArea" id="jsonArea"
-					ng-model='currentItem'
-					json-text
-					style="width:100%; height:100px"> </textarea>
-		  <input id="commitbutton" type="button" value="Commit" ng-click="commit()"
-				 ng-disabled="myForm.$invalid"/>
-	  </form>
 
-		<form name="templateForm">	  
-		  Template :
-		  <span ng-show="templateForm.$dirty">Save needed</span>
-		<textarea ng-model="template" id="templateArea" style=""></textarea>
-		</form>
-		
-		Template Result :<br/>
-		<div id="template" dynamic="template" style="width:100%;min-height:100px;border:1px solid rgb(169,169,169)"></div>
+	  <div id="debug">{{ items.length }}</div>
+	  <a href="#/univers/">Univers</a> > {{ dataSource }}
+	  
+	  <uib-tabset>
+		<uib-tab heading="Données">
+			<input id="readbutton"  type="button" value="Read"  ng-click="read()"/>
+			<input id="writebutton" type="button" value="Write" ng-click="write()"/>
+			<span id="IOmessage">{{ IOmessage}} </span></br>
+			
+			<ul>
+				<!-- tracking neeeded to make add working -->
+				<li ng-repeat="item in items track by item.url">{{ item.url | limitTo : 12 : 11 }} {{ item.title }} 
+					<a href ng-click="view($index)" >json</a>		
+					<a href="{{ item.url }}" target="_blank"><i class="icon-globe"></i></a>
+					<a href ng-click="delete($index)" ><i class="icon-trash"></i></a>
+				</li>
+			</ul>
+			
+			<input id="extractbutton" type="button" value="Extract" ng-click="extract()" />
+			
+			JSON : <span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
+					<span ng-message="id">An id is required</span>
+				   </span>
+				   <br/>
+				   
+			<form name="myForm" novalidate>
+				<textarea type="textarea" name="jsonArea" id="jsonArea"
+						  ng-model='currentItem'
+						  json-text
+						  style="width:100%; height:100px"> </textarea>
+				<input id="commitbutton" type="button" value="Commit" ng-click="commit()"
+					   ng-disabled="myForm.$invalid"/>
+			</form>
+		</uib-tab>
+		<uib-tab heading="Template">
+			<form name="templateForm">	  
+			  Template :
+			  <span ng-show="templateForm.$dirty">Save needed</span>
+			<textarea ng-model="template" id="templateArea" style=""></textarea>
+			</form>
+			
+			Template Result :<br/>
+			<div id="template" dynamic="template" style="width:100%;min-height:100px;border:1px solid rgb(169,169,169)"></div>
+		</uib-tab>
+	  </uib-tabset>
+
+
