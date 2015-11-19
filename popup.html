@@ -1,0 +1,65 @@
+<html ng-app="dataExtractorApp" ng-Csp>
+  <head>
+    <script src="js/lib/angular.js"></script>
+	<script src="js/lib/angular-messages.js"></script>
+    <script src="js/app/app.js"></script>
+	<script src="js/app/popup.js"></script>
+	<script src="js/app/storage.js"></script>
+	<script src="js/app/merge.js"></script>
+	<script src="js/app/directive.js"></script>
+	<!--script src="js/lib/jquery.min.js"></script-->
+    <!--script src="popup.js"></script-->
+    <!--script src="js/app/itemStorage.js"></script-->
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="css/angular-csp.css" rel="stylesheet" media="screen">
+	<link href="css/extension.css" rel="stylesheet" media="screen">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body ng-controller="dataExtractorCtrl" style="">
+	<div class="container-fluid">
+	  <div id="debug">{{ items.length }}</div>
+	  <form class="form-horizontal">
+	  Univers : <input type="text" id="dataSourceInput" ng-model="dataSource"/>
+	  </form>
+	  
+	  <input id="readbutton"  type="button" value="Read"  ng-click="read()"/>
+	  <input id="writebutton" type="button" value="Write" ng-click="write()"/>
+	  <span id="IOmessage">{{ IOmessage}} </span></br>
+	  
+	  <ul>
+		  <!-- tracking neeeded to make add working -->
+		  <li ng-repeat="item in items track by item.url">{{ item.url | limitTo : 12 : 11 }} {{ item.id }} 
+			  <a href ng-click="view($index)" >json</a>		
+			  <a href="{{ item.url }}" target="_blank"><i class="icon-globe"></i></a>
+			  <a href ng-click="delete($index)" ><i class="icon-trash"></i></a>
+		  </li>
+	  </ul>
+	  
+	  <input id="extractbutton" type="button" value="Extract" ng-click="extract()" />
+	  
+	  JSON : <span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
+			  <span ng-message="id">An id is required</span>
+			 </span>
+			 <br/>
+			 
+	  <form name="myForm" novalidate>
+		  <textarea type="textarea" name="jsonArea" id="jsonArea"
+					ng-model='currentItem'
+					json-text
+					style="width:100%; height:100px"> </textarea>
+		  <input id="commitbutton" type="button" value="Commit" ng-click="commit()"
+				 ng-disabled="myForm.$invalid"/>
+	  </form>
+	  
+	  Template :
+	  <form name="templateForm">	  
+		<span ng-show="templateForm.$dirty">Save needed</span>
+	  <textarea ng-model="template" id="templateArea" style=""></textarea>
+	  </form>
+  
+	  Template Result :<br/>
+	  <div id="template" dynamic="template" style="width:100%;min-height:100px;border:1px solid rgb(169,169,169)"></div>	
+	</div>
+  </body>
+</html>
+

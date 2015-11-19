@@ -1,0 +1,17 @@
+#dataSourceInput {
+	width: 100px;
+}
+
+#debug {
+	float:right;
+	color:red;
+	background: #B0E0B0;
+	font-weight: bold;
+	padding: 4px;
+}
+
+#templateArea, #jsonArea {
+	font-family: monospace;
+	width:100%;
+	height:80px;
+}
