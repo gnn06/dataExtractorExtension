@@ -12,6 +12,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
  
   $scope.dataSource = $routeParams.univer;
   $scope.items = [];
+  $scope.model = { template : "" };
   
   // -1 permet d'ajouter immÃƒÂ©diatement un item ÃƒÂ  la liste
   $scope.currentIndex = -1; 
@@ -30,7 +31,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 	});
 	storage.readTemplate(dataSource, function(result){
 		if (result != null) {
-			$scope.template = result;
+			$scope.model.template = result;
 			$scope.IOmessage += " template readed";
 			/* apply necessary because we are into a callback */
 			$scope.$apply();
@@ -47,13 +48,14 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 			$scope.$apply();
 		}
 	});
-	storage.writeTemplate(dataSource, $scope.template, function(result){
+	storage.writeTemplate(dataSource, $scope.model.template, function(result){
 		if (result == "success") {
 			$scope.IOmessage = "write succesful";
 		} else {
 			$scope.IOmessage = "write error";
 		}
-		$scope.templateForm.$setPristine();
+		// issue because form is now into a tab
+		//$scope.templateForm.$setPristine();
 		$scope.$apply();
 	});
   };
