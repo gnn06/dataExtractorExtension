@@ -11,11 +11,13 @@ myApp.controller('universCtrl', ["$scope", "storage", function ($scope, storage)
 myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge", "$routeParams", function ($scope, $compile, storage, merge, $routeParams) {
  
   $scope.dataSource = $routeParams.univer;
-  $scope.items = [];
-  $scope.model = { template : "" };
+  // currentIndex = -1 permet d'ajouter immÃƒÂ©diatement un item ÃƒÂ  la liste
+  $scope.model = { 
+	items : [], 
+	template : "", 
+	currentIndex : -1
+  };
   
-  // -1 permet d'ajouter immÃƒÂ©diatement un item ÃƒÂ  la liste
-  $scope.currentIndex = -1; 
   
   $scope.read = function() {
 	  
@@ -23,8 +25,8 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 	var dataSource = $scope.dataSource;
 	storage.readItems(dataSource, function(result) {
 		if (result != null) {
-			$scope.items = result;
-			$scope.IOmessage = $scope.items.length + "item(s) readed";
+			$scope.model.items = result;
+			$scope.IOmessage = $scope.model.items.length + "item(s) readed";
 			/* apply necessary because we are into a callback */
 			$scope.$apply();
 		}
