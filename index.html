@@ -6,8 +6,8 @@
 	  </ol>
 	  
 		<form>
-		<input id="readbutton"  type="button" value="Read"  ng-click="read()"/>
-		<input id="writebutton" type="button" value="Write" ng-click="write()"/>
+		<input id="readbutton"  type="button" class="btn btn-default" value="Read"  ng-click="read()"/>
+		<input id="writebutton" type="button" class="btn btn-default" value="Write" ng-click="write()"/>
 		<span id="IOmessage">{{ IOmessage}} </span></br>
 		</form>
 		
@@ -16,7 +16,7 @@
 			<table class="table table-condensed" id="item-list">
 				<!-- tracking neeeded to make add working -->
 				<tr ng-repeat="item in model.items track by item.url">
-					<td>{{ item.url | limitTo : 12 : 11 }}</td>
+					<td>{{ item.url | domain }}</td>
 					<td>{{ item.id }}</td>
 					<td>
 						<a href ng-click="view($index)" >json</a>		
@@ -26,7 +26,7 @@
 				</tr>
 			</table>
 			
-			<input id="extractbutton" type="button" value="Extract" ng-click="extract()" />
+			<input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
 			
 			JSON : <span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
 					<span ng-message="id">An id is required</span>
@@ -37,7 +37,7 @@
 				<textarea type="textarea" name="jsonArea" id="jsonArea"
 						  ng-model='model.currentItem'
 						  json-text> </textarea>
-				<input id="commitbutton" type="button" value="Commit" ng-click="commit()"
+				<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"
 					   ng-disabled="myForm.$invalid"/>
 			</form>
 		</uib-tab>
