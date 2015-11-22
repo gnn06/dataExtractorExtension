@@ -43,7 +43,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   
   $scope.write = function () {
 	var dataSource = $scope.dataSource;
-	var items = $scope.items;
+	var items = $scope.model.items;
 	storage.writeItems(dataSource, items, function(result) {
 		if (result == "SUCCESS") {
 			$scope.IOmessage = "write succesful";
@@ -63,17 +63,17 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   };
   
   $scope.view = function (index) {
-	  $scope.currentIndex = index;
-	  $scope.currentItem = $scope.items[index];
+	  $scope.model.currentIndex = index;
+	  $scope.model.currentItem = $scope.model.items[index];
   };
   
   $scope.open = function (index) {
-	  var newURL = $scope.items[index].url;
+	  var newURL = $scope.model.items[index].url;
 	  chrome.tabs.create({ url: newURL });  
   };
   
   $scope.delete = function (index) {
-	  $scope.items.splice(index, 1);
+	  $scope.model.items.splice(index, 1);
   };
     
   $scope.extract = function () {
@@ -90,21 +90,21 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 			tab[0].id, {/* request */},
 			function(response) {
 				response.response.url = url;
-				$scope.$apply($scope.currentItem = response.response);
-				$scope.$apply($scope.currentIndex = -1)
+				$scope.$apply($scope.model.currentItem = response.response);
+				$scope.$apply($scope.model.currentIndex = -1)
 			}
 		);						  });
   };
   
   $scope.commit = function () {
-	  if ($scope.currentIndex != -1) {
-			$scope.items[$scope.currentIndex] = $scope.currentItem;
+	  if ($scope.model.currentIndex != -1) {
+			$scope.model.items[$scope.model.currentIndex] = $scope.model.currentItem;
 	  } else {
-			if ($scope.items == undefined) {
-				$scope.items = new Array();
+			if ($scope.model.items == undefined) {
+				$scope.model.items = new Array();
 			}
-			$scope.items.push($scope.currentItem);
-			$scope.currentIndex = $scope.items.length - 1;
+			$scope.model.items.push($scope.model.currentItem);
+			$scope.model.currentIndex = $scope.model.items.length - 1;
 	  }
 	  $scope.IOmessage = "commited";
   };
@@ -116,7 +116,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 
 	//});
 
-	var result = merge.mergeCollection($scope.items);
+	var result = merge.mergeCollection($scope.model.items);
 
 	$scope.mergeItems = result;
   };
@@ -124,7 +124,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   /* initialise items and template */
   $scope.read();
   
-  $scope.$watch("items", $scope.merge, true);
+  $scope.$watch("model.items", $scope.merge, true);
   
 }]);
 

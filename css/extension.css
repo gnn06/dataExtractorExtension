@@ -13,7 +13,7 @@
 #templateArea, #jsonArea {
 	font-family: monospace;
 	width:100%;
-	height:80px;
+	height:12em;
 }
 
 #item-list, #templateForm {
