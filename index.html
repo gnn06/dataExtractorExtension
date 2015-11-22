@@ -17,8 +17,8 @@
 				<!-- tracking neeeded to make add working -->
 				<li ng-repeat="item in items track by item.url">{{ item.url | limitTo : 12 : 11 }} {{ item.title }} 
 					<a href ng-click="view($index)" >json</a>		
-					<a href="{{ item.url }}" target="_blank"><i class="icon-globe"></i></a>
-					<a href ng-click="delete($index)" ><i class="icon-trash"></i></a>
+					<a href="{{ item.url }}" target="_blank"><i class="glyphicon  glyphicon-globe"></i></a>
+					<a href ng-click="delete($index)" ><i class="glyphicon  glyphicon-trash"></i></a>
 				</li>
 			</ul>
 			
