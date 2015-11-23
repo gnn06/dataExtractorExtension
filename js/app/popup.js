@@ -8,11 +8,11 @@ myApp.controller('universCtrl', ["$scope", "storage", function ($scope, storage)
   });  
 }]);
 
-myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge", "$routeParams", function ($scope, $compile, storage, merge, $routeParams) {
+myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge", "$routeParams", '$timeout', function ($scope, $compile, storage, merge, $routeParams, $timeout) {
  
   $scope.dataSource = $routeParams.univer;
-  // currentIndex = -1 permet d'ajouter immÃƒÂ©diatement un item ÃƒÂ  la liste
-  $scope.model = { 
+  // currentIndex = -1 permet d'ajouter immédiatement un item à la liste
+  $scope.model = {
 	items : [], 
 	template : "", 
 	currentIndex : -1
@@ -50,7 +50,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 			$scope.$apply();
 		}
 	});
-	storage.writeTemplate(dataSource, $scope.model.template, function(result){
+	storage.writeTemplate(dataSource, $scope.model.template, function (result){
 		if (result == "success") {
 			$scope.IOmessage = "write succesful";
 		} else {
@@ -125,6 +125,40 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   $scope.read();
   
   $scope.$watch("model.items", $scope.merge, true);
+  
+  var savePromiseItems = null;
+  $scope.$watch("model.items", function() {
+      if (savePromiseItems != null)  {
+		   $timeout.cancel(savePromiseItems);
+	  }
+	  savePromiseItems = $timeout(function(){
+		  console.log('items autosaved');
+		  savePromiseItems = null;
+		  storage.writeItems($scope.dataSource, $scope.model.items, function(result) {
+			if (result == "SUCCESS") {
+				$scope.IOmessage = "write succesful";
+				$scope.$apply();
+			}
+		  });
+	}, 3000, false); 
+  }, true);
+  
+  var savePromiseTemplate = null;
+  $scope.$watch("model.template", function() {
+      if (savePromiseTemplate != null)  {
+		   $timeout.cancel(savePromiseTemplate);
+	  }
+	  savePromiseTemplate = $timeout(function(){
+		  console.log('template autosaved');
+		  savePromiseTemplate = null;
+		  storage.writeTemplate($scope.dataSource, $scope.model.template, function(result) {
+			if (result == "SUCCESS") {
+				$scope.IOmessage = "write succesful";
+				$scope.$apply();
+			}
+		  });
+	}, 3000); 
+  });
   
 }]);
 
