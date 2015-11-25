@@ -77,23 +77,37 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   };
     
   $scope.extract = function () {
+		// with no tabid, target = missed
+		// with tabid, from global, target = OK
+		// with tabid, from extract, target = OK
+		var tabid = parseInt(prompt('tabid'));
+		chrome.tabs.executeScript(tabid, {file:'../lib/jquery.min.js'}, function() {
+		  chrome.tabs.executeScript(tabid, {
+			code: 'document.body.style.backgroundColor="red";console.log(\'injected code\');var toto = $(\"h1\").text();chrome.runtime.sendMessage({value:toto});'
+		  })
+		});
 	// var temp = { title : "temp"};
 	// $scope.currentItem = temp;
 	// return;
 	var BP = chrome.extension.getBackgroundPage();
 	var mainWindow = BP.mainWindow;
 	
-	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab)
-						  {
-		var url = tab[0].url;
-		chrome.tabs.sendRequest(
-			tab[0].id, {/* request */},
-			function(response) {
-				response.response.url = url;
-				$scope.$apply($scope.model.currentItem = response.response);
-				$scope.$apply($scope.model.currentIndex = -1)
-			}
-		);						  });
+	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
+		//var url = tab[0].url;
+		//chrome.tabs.sendRequest(
+		//	tab[0].id, {/* request */},
+		//	function(response) {
+		//		response.response.url = url;
+		//		$scope.$apply($scope.model.currentItem = response.response);
+		//		$scope.$apply($scope.model.currentIndex = -1)
+		//	}
+		//);
+		//chrome.tabs.executeScript(tab[0].id, {file:'../lib/jquery.min.js'}, function() {
+		//  chrome.tabs.executeScript(tab[0].id, {
+		//	code: 'console.log(\'injected code\');'
+		//  });
+		 //});
+	});
   };
   
   $scope.commit = function () {
@@ -160,6 +174,13 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 	}, 3000); 
   });
   
+  console.log('register listener');
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log('into onMessage');
+	alert('dans onMessage, value='+request.value);
+  });
+
+  
 }]);
 
 myApp.config(function($routeProvider, $locationProvider) {
@@ -186,3 +207,4 @@ myApp.config( [
         // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
     }
 ]);
+

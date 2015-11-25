@@ -11,5 +11,10 @@ chrome.browserAction.onClicked.addListener(
 					  });
 		var viewTabUrl = chrome.extension.getURL('image.html');
 		chrome.windows.create({'url': 'popup.html', 'type': 'popup'});
+		alert(tab.id);
+		// with no tabid, target = tab's window
+		//chrome.tabs.executeScript(tab.id, {
+		//	code: 'document.body.style.color="red"'
+		//});
 	}
 );
