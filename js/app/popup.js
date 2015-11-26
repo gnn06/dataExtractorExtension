@@ -76,40 +76,6 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 	  $scope.model.items.splice(index, 1);
   };
     
-  $scope.extract = function () {
-		// with no tabid, target = missed
-		// with tabid, from global, target = OK
-		// with tabid, from extract, target = OK
-		var tabid = parseInt(prompt('tabid'));
-		chrome.tabs.executeScript(tabid, {file:'../lib/jquery.min.js'}, function() {
-		  chrome.tabs.executeScript(tabid, {
-			code: 'document.body.style.backgroundColor="red";console.log(\'injected code\');var toto = $(\"h1\").text();chrome.runtime.sendMessage({value:toto});'
-		  })
-		});
-	// var temp = { title : "temp"};
-	// $scope.currentItem = temp;
-	// return;
-	var BP = chrome.extension.getBackgroundPage();
-	var mainWindow = BP.mainWindow;
-	
-	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
-		//var url = tab[0].url;
-		//chrome.tabs.sendRequest(
-		//	tab[0].id, {/* request */},
-		//	function(response) {
-		//		response.response.url = url;
-		//		$scope.$apply($scope.model.currentItem = response.response);
-		//		$scope.$apply($scope.model.currentIndex = -1)
-		//	}
-		//);
-		//chrome.tabs.executeScript(tab[0].id, {file:'../lib/jquery.min.js'}, function() {
-		//  chrome.tabs.executeScript(tab[0].id, {
-		//	code: 'console.log(\'injected code\');'
-		//  });
-		 //});
-	});
-  };
-  
   $scope.commit = function () {
 	  if ($scope.model.currentIndex != -1) {
 			$scope.model.items[$scope.model.currentIndex] = $scope.model.currentItem;
@@ -174,13 +140,6 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 	}, 3000); 
   });
   
-  console.log('register listener');
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log('into onMessage');
-	alert('dans onMessage, value='+request.value);
-  });
-
-  
 }]);
 
 myApp.config(function($routeProvider, $locationProvider) {
@@ -192,6 +151,10 @@ myApp.config(function($routeProvider, $locationProvider) {
   .when("/univers/:univer", {
 	templateUrl : "index.html",
 	controller : "dataExtractorCtrl"
+  })
+  .when("/extractors/", {
+	templateUrl : "extractors.html",
+	controller : "extractorCtrl"
   })
   .otherwise({redirectTo: '/univers/'});
 });
@@ -208,3 +171,69 @@ myApp.config( [
     }
 ]);
 
+myApp.controller('extractorCtrl', ["$scope", '$timeout', 'storage', function ($scope, $timeout, storage) {
+  $scope.tabid = 546;
+  $scope.scopeToInject = "var toto = ";
+  $scope.extract = function () {
+		// with no tabid, target = missed
+		// with tabid, from global, target = OK
+		// with tabid, from extract, target = OK
+		var tabid = $scope.tabid;
+		var codeToInject = $scope.codeToInject;
+		var code = "var result = {};";
+		code += codeToInject;
+		code += "chrome.runtime.sendMessage(result);";
+		chrome.tabs.executeScript(tabid, {file:'../lib/jquery.min.js'}, function() {
+		  chrome.tabs.executeScript(tabid, {
+			code: code
+		  })
+		});
+	// var temp = { title : "temp"};
+	// $scope.currentItem = temp;
+	// return;
+	//var BP = chrome.extension.getBackgroundPage();
+	//var mainWindow = BP.mainWindow;
+	
+	//chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
+		//var url = tab[0].url;
+		//chrome.tabs.sendRequest(
+		//	tab[0].id, {/* request */},
+		//	function(response) {
+		//		response.response.url = url;
+		//		$scope.$apply($scope.model.currentItem = response.response);
+		//		$scope.$apply($scope.model.currentIndex = -1)
+		//	}
+		//);
+		//chrome.tabs.executeScript(tab[0].id, {file:'../lib/jquery.min.js'}, function() {
+		//  chrome.tabs.executeScript(tab[0].id, {
+		//	code: 'console.log(\'injected code\');'
+		//  });
+		 //});
+	//});
+  };
+
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	console.log('into onMessage');
+	$scope.resultJSON = request;
+	$scope.$apply();
+  });
+
+  $scope.read = function () {
+	storage.readCode($scope.url, function(result) {
+		if (result != null) {
+			$scope.codeToInject = result;
+			$scope.$apply();
+		}
+    });
+  };
+	
+  $scope.write = function () {
+	storage.writeCode($scope.url, $scope.codeToInject, function(result) {
+	  if (result == "SUCCESS") {
+		  $scope.IOmessage = "write succesful";
+		  $scope.$apply();
+	  }
+	});
+  };
+  
+}]);

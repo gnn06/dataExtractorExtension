@@ -19,7 +19,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-	<div class="container-fluid">
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <a class="navbar-brand" href="#">DataExtractor</a>
+		</div>
+		<div>
+		  <ul class="nav navbar-nav">
+			<li class="active"><a href="#/univers/">Univers</a></li>
+			<li><a href="#/univers/">Données</a></li>
+			<li><a href="#/extractors/">Extractors</a></li>
+		  </ul>
+		</div>
+	  </div>
+	</nav>
+	<div class="container-fluid">	  
 	  <div ng-view></div>
 	</div>
   </body>

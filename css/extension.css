@@ -10,7 +10,7 @@
 	padding: 4px;
 }
 
-#templateArea, #jsonArea {
+textarea {
 	font-family: monospace;
 	width:100%;
 	height:12em;

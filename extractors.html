@@ -1,0 +1,13 @@
+Extractor code :
+<form>
+    tabid : <input id="tabid" type="text" ng-model="tabid"/>
+    url : <input id="url" type="text" ng-model="url"/>
+    <input type="button" class="btn btn-default" value="Read" ng-click="read()" />
+    <input type="button" class="btn btn-default" value="Write" ng-click="write()" />
+    <textarea name="codeToInjectArea" ng-model="codeToInject"></textarea>
+    <input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
+    <br/>
+	Result : <textarea type="textarea" name="resultJSON" id="resultJSON"
+	  ng-model='resultJSON'
+      json-text></textarea>
+</form>

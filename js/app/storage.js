@@ -75,6 +75,34 @@ myApp.factory('storage', function() {
                     callback(result);
                 }
             });
+        },
+        
+        writeCode : function (dataSource, code, callback) {
+            var value = { };
+            value[dataSource + ".code"] = code;
+            chrome.storage.local.set(value, function() {
+                // Notify that we saved.*
+                if (chrome.runtime.lastError) {
+                    console.log('code write error');
+                    callback("error");
+                } else {
+                    console.log('code write succesful');
+                    callback("success");
+                }
+            });
+        },
+        
+        readCode : function (dataSource, callback) {
+            chrome.storage.local.get([dataSource + ".code"], function(object) {
+                if (chrome.runtime.lastError) {
+                    console.log("template read error");
+                    callback(null);
+                } else {
+                    console.log("template read succesful");
+                    var result = object[dataSource + ".code"];
+                    callback(result);
+                }
+            });
         }
         
 	};
