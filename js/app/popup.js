@@ -178,7 +178,7 @@ myApp.controller('extractorCtrl', ["$scope", '$timeout', 'storage', function ($s
 		// with no tabid, target = missed
 		// with tabid, from global, target = OK
 		// with tabid, from extract, target = OK
-		var tabid = $scope.tabid;
+		var tabid = parseInt($scope.tabid);
 		var codeToInject = $scope.codeToInject;
 		var code = "var result = {};";
 		code += codeToInject;
