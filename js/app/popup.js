@@ -142,98 +142,86 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
   
 }]);
 
-myApp.config(function($routeProvider, $locationProvider) {
-  $routeProvider
-  .when("/univers/", {
-	templateUrl : "univers.html",
-	controller : "universCtrl"
-  })
-  .when("/univers/:univer", {
-	templateUrl : "index.html",
-	controller : "dataExtractorCtrl"
-  })
-  .when("/extractors/", {
-	templateUrl : "extractors.html",
-	controller : "extractorCtrl"
-  })
-  .otherwise({redirectTo: '/univers/'});
-});
+myApp.controller('extractorListCtrl',
+  ["$scope", 'storage', '$routeParams',
+  function ($scope, storage, $routeParams) {
+  
+  $scope.univer = $routeParams.univer;
+  
+  $scope.read = function () {
+	storage.readCodeList($routeParams.univer, function(result) {
+		if (result != null) {
+		  $scope.codes = result;
+		  $scope.$apply();
+		}
+    });
+  };
+	
+  $scope.read();
+  
+}]);
 
-/* needed to make href without unsafe
- * cf https://stackoverflow.com/questions/15606751/angular-changes-urls-to-unsafe-in-extension-page/15769779#15769779
- */
-myApp.config( [
-    '$compileProvider',
-    function( $compileProvider )
-    {   
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
-        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
-    }
-]);
+myApp.controller('extractorCtrl',
+  ["$scope", '$timeout', 'storage', '$routeParams',
+  function ($scope, $timeout, storage, $routeParams)
+  {
+	var BP = chrome.extension.getBackgroundPage();
+	var mainWindow = BP.mainWindow;
+	
+	$scope.univer = $routeParams.univer;
+	$scope.extractorId = $routeParams.extractor;
+	$scope.new = $routeParams.extractor == undefined;
+	
+	if ($routeParams.extractor != undefined) {
+	  storage.readCode($scope.univer, $scope.extractorId, function(result) {
+		if (result != null) {
+		  $scope.extractor = result;
+		  $scope.$apply();
+		}
+	  });
+	}
 
-myApp.controller('extractorCtrl', ["$scope", '$timeout', 'storage', function ($scope, $timeout, storage) {
-  $scope.tabid = 546;
-  $scope.scopeToInject = "var toto = ";
-  $scope.extract = function () {
-		// with no tabid, target = missed
-		// with tabid, from global, target = OK
-		// with tabid, from extract, target = OK
-		var tabid = parseInt($scope.tabid);
-		var codeToInject = $scope.codeToInject;
-		var code = "var result = {};";
-		code += codeToInject;
-		code += "chrome.runtime.sendMessage(result);";
+	$scope.write = function () {
+	  storage.writeCode($scope.univer, $scope.extractorId, $scope.extractor, function(result) {
+		if (result == "SUCCESS") {
+			$scope.IOmessage = "write succesful";
+			$scope.$apply();
+		}
+	  });
+	  if ($scope.new) {
+        storage.readCodeList($scope.univer, function(result) {
+		  result.push($scope.extractorId);
+		  storage.writeCodeList($scope.univer, result, function(result){});
+		});
+		$scope.new = false;
+      }
+	};
+	
+	$scope.extract = function () {
+	  var codeToInject = $scope.extractor.code;
+	  var code = "var result = {};";
+	  code += codeToInject;
+	  code += "chrome.runtime.sendMessage(result);";
+	  chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
+		var tabid = tab[0].id;
 		chrome.tabs.executeScript(tabid, {file:'../lib/jquery.min.js'}, function() {
 		  chrome.tabs.executeScript(tabid, {
 			code: code
 		  })
 		});
-	// var temp = { title : "temp"};
-	// $scope.currentItem = temp;
-	// return;
-	//var BP = chrome.extension.getBackgroundPage();
-	//var mainWindow = BP.mainWindow;
-	
-	//chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
-		//var url = tab[0].url;
-		//chrome.tabs.sendRequest(
-		//	tab[0].id, {/* request */},
-		//	function(response) {
-		//		response.response.url = url;
-		//		$scope.$apply($scope.model.currentItem = response.response);
-		//		$scope.$apply($scope.model.currentIndex = -1)
-		//	}
-		//);
-		//chrome.tabs.executeScript(tab[0].id, {file:'../lib/jquery.min.js'}, function() {
-		//  chrome.tabs.executeScript(tab[0].id, {
-		//	code: 'console.log(\'injected code\');'
-		//  });
-		 //});
-	//});
-  };
-
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	console.log('into onMessage');
-	$scope.resultJSON = request;
-	$scope.$apply();
-  });
-
-  $scope.read = function () {
-	storage.readCode($scope.url, function(result) {
-		if (result != null) {
-			$scope.codeToInject = result;
+		if ($scope.new) {
+            $scope.extractor.url = tab[0].url;
 			$scope.$apply();
-		}
-    });
-  };
-	
-  $scope.write = function () {
-	storage.writeCode($scope.url, $scope.codeToInject, function(result) {
-	  if (result == "SUCCESS") {
-		  $scope.IOmessage = "write succesful";
-		  $scope.$apply();
-	  }
-	});
-  };
-  
-}]);
+        }
+	  });
+	};
+
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	  console.log('into onMessage');
+	  $scope.resultJSON = request;
+	  $scope.$apply();
+	});  
+
+  }]
+
+);

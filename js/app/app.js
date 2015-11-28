@@ -1,1 +1,34 @@
 var myApp = angular.module('dataExtractorApp', ["ngMessages", "ngRoute", 'ui.bootstrap']);
+
+myApp.config(function($routeProvider, $locationProvider) {
+  $routeProvider
+  .when("/univers/", {
+	templateUrl : "univers.html",
+	controller : "universCtrl"
+  })
+  .when("/univers/:univer/data", {
+	templateUrl : "index.html",
+	controller : "dataExtractorCtrl"
+  })
+  .when("/univers/:univer/extractors", {
+	templateUrl : "view/extractors.html",
+	controller : "extractorListCtrl"
+  })
+  .when("/univers/:univer/extractor/:extractor?", {
+	templateUrl : "view/extractor.html",
+	controller : "extractorCtrl"
+  })
+  .otherwise({redirectTo: '/univers/'});
+});
+
+/* needed to make href without unsafe
+ * cf https://stackoverflow.com/questions/15606751/angular-changes-urls-to-unsafe-in-extension-page/15769779#15769779
+ */
+myApp.config( [
+    '$compileProvider',
+    function( $compileProvider )
+    {   
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
+    }
+]);

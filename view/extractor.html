@@ -1,10 +1,9 @@
-Extractor code :
+univer : {{univer}}<br/>
 <form>
-    tabid : <input id="tabid" type="text" ng-model="tabid"/>
-    url : <input id="url" type="text" ng-model="url"/>
-    <input type="button" class="btn btn-default" value="Read" ng-click="read()" />
+    extractor id : <input id="url" type="text" ng-model="extractorId"/><br>
+	<a href="{{extractor.url}}" target="_blank">open example</a>
     <input type="button" class="btn btn-default" value="Write" ng-click="write()" />
-    <textarea name="codeToInjectArea" ng-model="codeToInject"></textarea>
+    <textarea name="codeToInjectArea" ng-model="extractor.code"></textarea>
     <input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
     <br/>
 	Result : <textarea type="textarea" name="resultJSON" id="resultJSON"

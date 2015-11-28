@@ -63,7 +63,7 @@ myApp.factory('storage', function() {
                 }
             });
         },
-
+        
         readUniver : function (callback) {
             chrome.storage.local.get(["univers"], function(object) {
                 if (chrome.runtime.lastError) {
@@ -77,10 +77,39 @@ myApp.factory('storage', function() {
             });
         },
         
-        writeCode : function (dataSource, code, callback) {
-            var value = { };
-            value[dataSource + ".code"] = code;
-            chrome.storage.local.set(value, function() {
+        readCodeList : function (dataSource, callback) {
+            this.read(dataSource, "codes", callback);
+        },
+        
+        writeCodeList : function (dataSource, codesId, callback) {
+            this.write(dataSource, "codes", codesId, callback);
+        },
+        
+        readCode : function (dataSource, id, callback) {
+            this.read(dataSource, "code." + id, callback);
+        },
+
+        writeCode : function (dataSource, id, code, callback) {
+            this.write(dataSource, "code." + id, code, callback);
+        },
+        
+        read : function (dataSource, key, callback) {
+            chrome.storage.local.get([dataSource + "." + key], function(object) {
+                if (chrome.runtime.lastError) {
+                    console.log("template read error");
+                    callback(null);
+                } else {
+                    console.log("template read succesful");
+                    var result = object[dataSource + "." + key];
+                    callback(result);
+                }
+            });
+        },
+        
+        write : function (dataSource, key, value, callback) {
+            var valuePair = { };
+            valuePair[dataSource + "." + key] = value;
+            chrome.storage.local.set(valuePair, function() {
                 // Notify that we saved.*
                 if (chrome.runtime.lastError) {
                     console.log('code write error');
@@ -88,19 +117,6 @@ myApp.factory('storage', function() {
                 } else {
                     console.log('code write succesful');
                     callback("success");
-                }
-            });
-        },
-        
-        readCode : function (dataSource, callback) {
-            chrome.storage.local.get([dataSource + ".code"], function(object) {
-                if (chrome.runtime.lastError) {
-                    console.log("template read error");
-                    callback(null);
-                } else {
-                    console.log("template read succesful");
-                    var result = object[dataSource + ".code"];
-                    callback(result);
                 }
             });
         }
