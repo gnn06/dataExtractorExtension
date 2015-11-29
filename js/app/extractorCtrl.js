@@ -31,28 +31,24 @@ myApp.controller('extractorCtrl',
     var oldId = null;
 	
 	$scope.univer = $routeParams.univer;
-	$scope.extractorId = $routeParams.extractor;
-	$scope.new = $routeParams.extractor == undefined;
+	// $routeParams.extractorId
 	
 	if ($routeParams.extractor != undefined) {
-	  storage.readCode($scope.univer, $scope.extractorId, function(result) {
+	  storage.readCode($scope.univer, $routeParams.extractor, function(result) {
 		if (result != null) {
 		  $scope.extractor = result;
 		  oldId = $scope.extractorId;
 		  $scope.$apply();
 		}
 	  });
+	  $scope.extractorId = $routeParams.extractor;
 	}
 
 	$scope.write = function () {
 	  storage.writeCode($scope.univer, $scope.extractorId, oldId, $scope.extractor, function(result) {
 		if (result == "SUCCESS") {
-		  if ($scope.new) {
-			$scope.new = false;
-		  }
 		  oldId = $scope.extractorId;
 		  $scope.myForm.$setPristine();
-		  $scope.IOmessage = "write succesful";
 		  $scope.$apply();
 		}
 	  });
@@ -70,7 +66,7 @@ myApp.controller('extractorCtrl',
 			code: code
 		  })
 		});
-		if ($scope.new) {
+		if ($scope.extractor.urlpattern == undefined) {
             $scope.extractor.urlexample = tab[0].url;
 			$scope.extractor.urlpattern = tab[0].url;
 			$scope.$apply();

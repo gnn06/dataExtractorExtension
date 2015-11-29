@@ -88,6 +88,9 @@ myApp.factory('storage', function() {
                         result.push(attrname.substring(i + 6));
                     }
                 }
+                if (result.length == 0) {
+                    result = null;
+                }
                 callback(result);
             });
         },
@@ -104,14 +107,7 @@ myApp.factory('storage', function() {
         },
         
         deleteCode : function (univer, id, callback) {
-            chrome.storage.local.remove([univer + ".code." + id],
-                function() {
-                    if (chrome.runtime.lastError) {
-                        callback("ERROR");
-                    } else {
-                        callback("SUCCESS");
-                    }
-                });
+            this.delete(univer, "code." + id, callback);
         },
         
         //---------------------------------------------------------------------
@@ -120,7 +116,7 @@ myApp.factory('storage', function() {
             chrome.storage.local.get([dataSource + "." + key], function(object) {
                 if (chrome.runtime.lastError) {
                     console.log("template read error");
-                    callback(null);
+                    callback("ERROR");
                 } else {
                     console.log("template read succesful");
                     var result = object[dataSource + "." + key];
@@ -136,12 +132,24 @@ myApp.factory('storage', function() {
                 // Notify that we saved.*
                 if (chrome.runtime.lastError) {
                     console.log('code write error');
-                    callback("error");
+                    callback("ERROR");
                 } else {
                     console.log('code write succesful');
                     callback("SUCCESS");
                 }
             });
+        },
+        
+        delete : function (univer, key, callback) {
+            chrome.storage.local.remove([univer + "." + key],
+                function() {
+                    if (chrome.runtime.lastError) {
+                        console.log('delete write error');
+                        callback("ERROR");
+                    } else {
+                        callback("SUCCESS");
+                    }
+                });
         }
         
 	};
