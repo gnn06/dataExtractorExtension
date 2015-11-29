@@ -15,6 +15,11 @@ myApp.controller('extractorListCtrl',
 	
   $scope.read();
   
+  $scope.delete = function (id) {
+	storage.deleteCode($scope.univer, id, function(result) {});
+	$scope.read();
+  };
+  
 }]);
 
 myApp.controller('extractorCtrl',
@@ -23,6 +28,7 @@ myApp.controller('extractorCtrl',
   {
 	var BP = chrome.extension.getBackgroundPage();
 	var mainWindow = BP.mainWindow;
+    var oldId = null;
 	
 	$scope.univer = $routeParams.univer;
 	$scope.extractorId = $routeParams.extractor;
@@ -32,21 +38,19 @@ myApp.controller('extractorCtrl',
 	  storage.readCode($scope.univer, $scope.extractorId, function(result) {
 		if (result != null) {
 		  $scope.extractor = result;
+		  oldId = $scope.extractorId;
 		  $scope.$apply();
 		}
 	  });
 	}
 
 	$scope.write = function () {
-	  storage.writeCode($scope.univer, $scope.extractorId, $scope.extractor, function(result) {
+	  storage.writeCode($scope.univer, $scope.extractorId, oldId, $scope.extractor, function(result) {
 		if (result == "SUCCESS") {
 		  if ($scope.new) {
-			storage.readCodeList($scope.univer, function(result) {
-			  result.push($scope.extractorId);
-			  storage.writeCodeList($scope.univer, result, function(result){});
-			});
 			$scope.new = false;
 		  }
+		  oldId = $scope.extractorId;
 		  $scope.myForm.$setPristine();
 		  $scope.IOmessage = "write succesful";
 		  $scope.$apply();

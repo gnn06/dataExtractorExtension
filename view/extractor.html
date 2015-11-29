@@ -10,7 +10,8 @@ univer : {{univer}}<br/>
     
     <textarea name="codeToInjectArea" ng-model="extractor.code" required></textarea>
     
-    <input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
+    <input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()"
+        ng-disabled="myForm.codeToInjectArea.$invalid"/>
     <br/>
 	Result : <textarea type="textarea" name="resultJSON" name="resultJSON"
 	  ng-model='resultJSON | json'></textarea>

@@ -77,22 +77,45 @@ myApp.factory('storage', function() {
             });
         },
         
-        readCodeList : function (dataSource, callback) {
-            this.read(dataSource, "codes", callback);
-        },
+        //---------------------------------------------------------------------
         
-        writeCodeList : function (dataSource, codesId, callback) {
-            this.write(dataSource, "codes", codesId, callback);
+        readCodeList : function (dataSource, callback) {
+            chrome.storage.local.get(null, function(objects) {
+                var result = new Array();
+                for (var attrname in objects) {
+                    var i = attrname.indexOf(".code.");
+                    if (i > -1) {
+                        result.push(attrname.substring(i + 6));
+                    }
+                }
+                callback(result);
+            });
         },
         
         readCode : function (dataSource, id, callback) {
             this.read(dataSource, "code." + id, callback);
         },
 
-        writeCode : function (dataSource, id, code, callback) {
-            this.write(dataSource, "code." + id, code, callback);
+        writeCode : function (univer, id, oldId, code, callback) {
+            this.write(univer, "code." + id, code, callback);
+            if (oldId != id) {
+                this.deleteCode(univer, oldId, callback);
+            }
         },
         
+        deleteCode : function (univer, id, callback) {
+            chrome.storage.local.remove([univer + ".code." + id],
+                function() {
+                    if (chrome.runtime.lastError) {
+                        callback("ERROR");
+                    } else {
+                        callback("SUCCESS");
+                    }
+                });
+        },
+        
+        //---------------------------------------------------------------------
+
         read : function (dataSource, key, callback) {
             chrome.storage.local.get([dataSource + "." + key], function(object) {
                 if (chrome.runtime.lastError) {
