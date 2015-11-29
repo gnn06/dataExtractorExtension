@@ -3,12 +3,12 @@ var myApp = angular.module('dataExtractorApp', ["ngMessages", "ngRoute", 'ui.boo
 myApp.config(function($routeProvider, $locationProvider) {
   $routeProvider
   .when("/univers/", {
-	templateUrl : "univers.html",
+	templateUrl : "view/univers.html",
 	controller : "universCtrl"
   })
   .when("/univers/:univer/data", {
-	templateUrl : "index.html",
-	controller : "dataExtractorCtrl"
+	templateUrl : "view/data.html",
+	controller : "dataCtrl"
   })
   .when("/univers/:univer/extractors", {
 	templateUrl : "view/extractors.html",

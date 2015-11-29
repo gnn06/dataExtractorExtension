@@ -8,7 +8,7 @@ myApp.controller('universCtrl', ["$scope", "storage", function ($scope, storage)
   });  
 }]);
 
-myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge", "$routeParams", '$timeout', function ($scope, $compile, storage, merge, $routeParams, $timeout) {
+myApp.controller('dataCtrl', ["$scope", "$compile", "storage", "merge", "$routeParams", '$timeout', function ($scope, $compile, storage, merge, $routeParams, $timeout) {
  
   $scope.dataSource = $routeParams.univer;
   // currentIndex = -1 permet d'ajouter immédiatement un item à la liste

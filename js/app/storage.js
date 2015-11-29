@@ -84,7 +84,8 @@ myApp.factory('storage', function() {
                 var result = new Array();
                 for (var attrname in objects) {
                     var i = attrname.indexOf(".code.");
-                    if (i > -1) {
+                    var j = attrname.indexOf(dataSource);
+                    if (i > -1 && j == 0) {
                         result.push(attrname.substring(i + 6));
                     }
                 }
