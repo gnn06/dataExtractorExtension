@@ -59,7 +59,7 @@ myApp.factory('storage', function() {
                     callback("error");
                 } else {
                     console.log('template write succesful');
-                    callback("success");
+                    callback("SUCCESS");
                 }
             });
         },
@@ -116,7 +116,7 @@ myApp.factory('storage', function() {
                     callback("error");
                 } else {
                     console.log('code write succesful');
-                    callback("success");
+                    callback("SUCCESS");
                 }
             });
         }

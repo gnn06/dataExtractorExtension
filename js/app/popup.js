@@ -51,7 +51,7 @@ myApp.controller('dataExtractorCtrl', ["$scope", "$compile", "storage", "merge",
 		}
 	});
 	storage.writeTemplate(dataSource, $scope.model.template, function (result){
-		if (result == "success") {
+		if (result == "SUCCESS") {
 			$scope.IOmessage = "write succesful";
 		} else {
 			$scope.IOmessage = "write error";
@@ -184,17 +184,18 @@ myApp.controller('extractorCtrl',
 	$scope.write = function () {
 	  storage.writeCode($scope.univer, $scope.extractorId, $scope.extractor, function(result) {
 		if (result == "SUCCESS") {
-			$scope.IOmessage = "write succesful";
-			$scope.$apply();
+		  if ($scope.new) {
+			storage.readCodeList($scope.univer, function(result) {
+			  result.push($scope.extractorId);
+			  storage.writeCodeList($scope.univer, result, function(result){});
+			});
+			$scope.new = false;
+		  }
+		  $scope.myForm.$setPristine();
+		  $scope.IOmessage = "write succesful";
+		  $scope.$apply();
 		}
 	  });
-	  if ($scope.new) {
-        storage.readCodeList($scope.univer, function(result) {
-		  result.push($scope.extractorId);
-		  storage.writeCodeList($scope.univer, result, function(result){});
-		});
-		$scope.new = false;
-      }
 	};
 	
 	$scope.extract = function () {
@@ -210,7 +211,8 @@ myApp.controller('extractorCtrl',
 		  })
 		});
 		if ($scope.new) {
-            $scope.extractor.url = tab[0].url;
+            $scope.extractor.urlexample = tab[0].url;
+			$scope.extractor.urlpattern = tab[0].url;
 			$scope.$apply();
         }
 	  });

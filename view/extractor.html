@@ -1,12 +1,17 @@
 univer : {{univer}}<br/>
-<form>
-    extractor id : <input id="url" type="text" ng-model="extractorId"/><br>
-	<a href="{{extractor.url}}" target="_blank">open example</a>
-    <input type="button" class="btn btn-default" value="Write" ng-click="write()" />
-    <textarea name="codeToInjectArea" ng-model="extractor.code"></textarea>
+<form name="myForm">
+    extractor id : <input name="id" type="text" ng-model="extractorId" required/><br>
+    extractor pattern : <input name="url-pattern" type="text" ng-model="extractor.urlpattern" required/><br>
+	<a ng-hide="extractor.urlexample == undefined" href="{{extractor.urlexample}}" target="_blank">open example</a>
+    
+    <input type="button" class="btn btn-default" value="Write" ng-click="write()"
+        ng-disabled="myForm.$invalid"/>
+    <span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
+    
+    <textarea name="codeToInjectArea" ng-model="extractor.code" required></textarea>
+    
     <input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
     <br/>
-	Result : <textarea type="textarea" name="resultJSON" id="resultJSON"
-	  ng-model='resultJSON'
-      json-text></textarea>
+	Result : <textarea type="textarea" name="resultJSON" name="resultJSON"
+	  ng-model='resultJSON | json'></textarea>
 </form>
