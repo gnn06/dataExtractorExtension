@@ -5,11 +5,12 @@
 	<script src="js/lib/angular-route.min.js"></script>
 	<script src="js/lib/ui-bootstrap-tpls-0.14.3.min.js"></script>
     <script src="js/app/app.js"></script>
-	<script src="js/app/dataCtrl.js"></script>
 	<script src="js/app/storage.js"></script>
 	<script src="js/app/merge.js"></script>
 	<script src="js/app/directive.js"></script>
 	<script src="js/app/filter.js"></script>
+	<script src="js/app/dataCtrl.js"></script>
+	<script src="js/app/templateCtrl.js"></script>
 	<script src="js/app/headerCtrl.js"></script>
 	<script src="js/app/extractorCtrl.js"></script>
 	<!--script src="js/lib/jquery.min.js"></script-->
@@ -31,7 +32,8 @@
 		  <ul class="nav navbar-nav">
 			<li ng-class="$route.current.templateUrl == 'view/univers.html' ? 'active' : ''"><a href="#/univers/">Univers</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/data.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/data">Données</a></li>
-			<li ng-class="$route.current.templateUrl == 'view/extractors.html' || $route.current.templateUrl == 'view/extractor.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/extractors">Extractors</a></li>
+			<li ng-class="$route.current.templateUrl == 'view/template.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/template">Template</a></li>
+			<li ng-class="$route.current.templateUrl == 'view/extractors.html' || $route.current.templateUrl == 'view/extractor.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/extractors">Extracteurs</a></li>
 		  </ul>
 		</div>
 	  </div>

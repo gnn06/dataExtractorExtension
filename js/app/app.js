@@ -10,6 +10,10 @@ myApp.config(function($routeProvider, $locationProvider) {
 	templateUrl : "view/data.html",
 	controller : "dataCtrl"
   })
+  .when("/univers/:univer/template", {
+	templateUrl : "view/template.html",
+	controller : "templateCtrl"
+  })
   .when("/univers/:univer/extractors", {
 	templateUrl : "view/extractors.html",
 	controller : "extractorListCtrl"
@@ -32,3 +36,13 @@ myApp.config( [
         // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
     }
 ]);
+
+myApp.controller('universCtrl', ["$scope", "storage", function ($scope, storage) {
+ 
+  storage.readUniver(function(result) {
+	  if (result != null) {
+		$scope.univers = result;
+		$scope.$apply();
+	  }
+  });  
+}]);
