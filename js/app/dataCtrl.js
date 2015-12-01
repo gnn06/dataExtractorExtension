@@ -1,4 +1,7 @@
-myApp.controller('dataCtrl', ["$scope", "$compile", "storage", "$routeParams", '$timeout', function ($scope, $compile, storage, $routeParams, $timeout) {
+myApp.controller('dataCtrl',
+  ["$scope", "$compile", "storage", "$routeParams", '$timeout',
+   'injector',
+  function ($scope, $compile, storage, $routeParams, $timeout, injector) {
  
   $scope.dataSource = $routeParams.univer;
   // currentIndex = -1 permet d'ajouter immédiatement un item à la liste
@@ -56,6 +59,20 @@ myApp.controller('dataCtrl', ["$scope", "$compile", "storage", "$routeParams", '
 			$scope.model.currentIndex = $scope.model.items.length - 1;
 	  }
 	  $scope.IOmessage = "commited";
+  };
+  
+  $scope.extract = function () {
+	var BP = chrome.extension.getBackgroundPage();
+	var mainWindow = BP.mainWindow;
+	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
+      var url = tab[0].url;
+	  storage.readCodeByURL($scope.dataSource, url, function(result) {
+		injector.extract(result.code, mainWindow, function(result) {
+		  $scope.model.currentItem = result;
+		  $scope.$apply();
+		});
+	  });
+	});
   };
   
   /* initialise items and template */

@@ -96,6 +96,26 @@ myApp.factory('storage', function() {
             });
         },
         
+        readCodeByURL : function (dataSource, url, callback) {
+            chrome.storage.local.get(null, function(objects) {
+                var result = new Array();
+                for (var attrname in objects) {
+                    var i = attrname.indexOf(".code.");
+                    var j = attrname.indexOf(dataSource);
+                    if (i > -1 && j == 0) {
+                        var code = objects[attrname];
+                        if (url.indexOf(code.urlpattern) > -1) {
+                            callback(code);
+                        }
+                    }
+                }
+                if (result.length == 0) {
+                    result = null;
+                }
+                callback(result);
+            });
+        },
+        
         readCode : function (dataSource, id, callback) {
             this.read(dataSource, "code." + id, callback);
         },
