@@ -56,7 +56,7 @@ myApp.controller('extractorCtrl',
 	
 	$scope.extract = function () {
 	  var codeToInject = $scope.extractor.code;
-	  injector.extract(codeToInject, mainWindow, function(result) {
+	  injector.extract(codeToInject, mainWindow, function(result/*request, sender, sendResponse*/) {
 		$scope.resultJSON = result;
         $scope.$apply();
 	  });

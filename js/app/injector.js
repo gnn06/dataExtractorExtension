@@ -1,11 +1,15 @@
 myApp.factory('injector', function() {
     
-    return {
-        "extract": function(codeToInject, mainWindow, callback) {
+            var injectorFunction;
+
             chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 console.log('into onMessage');
-                callback(request);
+                injectorFunction(request);
             });
+            
+    return {
+        "extract": function(codeToInject, mainWindow, callback) {
+            injectorFunction = callback;
             
             var code = "var result = {};";
             code += codeToInject;
