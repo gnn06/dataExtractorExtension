@@ -66,8 +66,9 @@ myApp.controller('dataCtrl',
 	var mainWindow = BP.mainWindow;
 	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
       var url = tab[0].url;
+	  var tabid = tab[0].id;
 	  storage.readCodeByURL($scope.dataSource, url, function(result) {
-		injector.extract(result.code, mainWindow, function(result) {
+		injector.extract(result.code, mainWindow, tabid, function(result) {
 		  $scope.model.currentItem = result;
 		  $scope.$apply();
 		});

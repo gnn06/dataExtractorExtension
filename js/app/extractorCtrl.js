@@ -26,8 +26,6 @@ myApp.controller('extractorCtrl',
   ["$scope", '$timeout', 'storage', '$routeParams', 'injector',
   function ($scope, $timeout, storage, $routeParams, injector)
   {
-	var BP = chrome.extension.getBackgroundPage();
-	var mainWindow = BP.mainWindow;
     var oldId = null;
 	
 	$scope.univer = $routeParams.univer;
@@ -55,10 +53,19 @@ myApp.controller('extractorCtrl',
 	};
 	
 	$scope.extract = function () {
-	  var codeToInject = $scope.extractor.code;
-	  injector.extract(codeToInject, mainWindow, function(result/*request, sender, sendResponse*/) {
-		$scope.resultJSON = result;
-        $scope.$apply();
+	  var BP = chrome.extension.getBackgroundPage();
+	  var mainWindow = BP.mainWindow;
+	  chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
+		var codeToInject = $scope.extractor.code;
+		injector.extract(codeToInject, mainWindow, tab[0].id, function(result/*request, sender, sendResponse*/) {
+		  $scope.resultJSON = result;
+		  if ($scope.extractor.urlpattern == undefined) {
+		      $scope.extractor.urlexample = tab[0].url;
+		      $scope.extractor.urlpattern = tab[0].url;
+		      $scope.$apply();
+		  }
+		  $scope.$apply();
+		});
 	  });
 	};
 
