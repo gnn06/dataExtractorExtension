@@ -57,6 +57,13 @@ myApp.factory('merge', function() {
             return item1;
         },
         
+        refresh : function (dst, src) {
+            for (var attrname in src) {
+                dst[attrname] = src[attrname];
+            }
+            return dst;
+        },
+        
         mergeTwoCollections : function (callback) {
             var zeperfs = null;
             var autoplus = null;

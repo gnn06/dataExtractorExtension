@@ -1,7 +1,7 @@
 myApp.controller('dataCtrl',
   ["$scope", "$compile", "storage", "$routeParams", '$timeout',
-   'injector',
-  function ($scope, $compile, storage, $routeParams, $timeout, injector) {
+   'injector', 'merge',
+  function ($scope, $compile, storage, $routeParams, $timeout, injector, merge) {
  
   $scope.dataSource = $routeParams.univer;
   // currentIndex = -1 permet d'ajouter immédiatement un item à la liste
@@ -61,19 +61,37 @@ myApp.controller('dataCtrl',
 	  $scope.IOmessage = "commited";
   };
   
-  $scope.extract = function () {
-	var BP = chrome.extension.getBackgroundPage();
+  function extract(callback) {
+    var BP = chrome.extension.getBackgroundPage();
 	var mainWindow = BP.mainWindow;
 	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
       var url = tab[0].url;
 	  var tabid = tab[0].id;
 	  storage.readCodeByURL($scope.dataSource, url, function(result) {
-		injector.extract(result.code, mainWindow, tabid, function(result) {
-		  $scope.model.currentItem = result;
-		  $scope.$apply();
+		injector.extract(result.code, mainWindow, tabid, function(result){
+		  result.url = url;
+		  callback(result);
 		});
 	  });
 	});
+  }
+  
+  $scope.extract = function () {
+	extract(function(result){;
+	  $scope.model.currentItem = result;
+	  $scope.$apply();
+	})
+  };
+  
+  $scope.refresh = function () {
+	extract(function(result){
+	  var temp = {};
+	  merge.refresh(temp, $scope.model.currentItem);
+	  merge.refresh(temp, result);
+	  $scope.model.currentItem = temp;
+	  $scope.$apply();
+	});
+	$scope.$apply($scope.model.currentItem.poids = 100000);
   };
   
   /* initialise items and template */
@@ -91,6 +109,7 @@ myApp.controller('dataCtrl',
 		  savePromiseItems = null;
 		  storage.writeItems($scope.dataSource, $scope.model.items, function(result) {
 			if (result == "SUCCESS") {
+				$scope.writeSuccess = true;
 				$scope.IOmessage = "write succesful";
 				$scope.$apply();
 			}

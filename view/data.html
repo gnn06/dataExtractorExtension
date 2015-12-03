@@ -1,5 +1,12 @@
 <p>Données</p>
 <table class="table table-condensed" id="item-list">
+	<thead>
+		<tr>
+			<th>Site</th>
+			<th>Id</th>
+			<th>Action</th>
+		</tr>	
+	</thead>
 	<!-- tracking neeeded to make add working -->
 	<tr ng-repeat="item in model.items track by item.url">
 		<td>{{ item.url | domain }}</td>
@@ -12,13 +19,15 @@
 	</tr>
 </table>
 	
-<input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
-<span id="IOmessage">{{ IOmessage}} </span>
-
-<span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
+<div class="form-group">
+	<input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()" />
+	<input id="refreshbutton" type="button" class="btn btn-default" value="Réactualiser" ng-click="refresh()" />
+	<span id="IOmessage">{{ IOmessage}} </span>
+	<span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
 		<span ng-message="id">An id is required</span>
-	   </span>
-	   <br/>
+	</span>
+</div>
+
 	   
 <form name="myForm" novalidate>
     <div class="form-group">

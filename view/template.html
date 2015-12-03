@@ -3,8 +3,7 @@
     <div class="form-group">
 		<label for="templateArea">Template</label>
 		<span ng-show="templateForm.$dirty">Sauvegarde nécessaire</span>
-		<span ng-show="writeSuccess">Sauvegarde réalisée</span>
-		<span id="IOmessage">{{ IOmessage }} </span>
+		<span ng-show="writeSuccess && templateForm.$pristine">Sauvegarde réalisée</span>
 		<textarea ng-model="template" id="templateArea" style=""></textarea>
 	</div>
 </form>
