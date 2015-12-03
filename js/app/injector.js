@@ -1,5 +1,6 @@
 myApp.factory('injector', function() {
     
+            //TODO make threadsafe
             var injectorFunction;
 
             chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
