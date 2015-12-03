@@ -20,7 +20,7 @@ myApp.controller('templateCtrl', ["$scope", "storage", "merge", "$routeParams", 
 	});
   };
   
-  $scope.write = function () {
+  /*$scope.write = function () {
 	var dataSource = $scope.dataSource;
 	storage.writeTemplate(dataSource, $scope.template, function (result){
 		if (result == "SUCCESS") {
@@ -32,7 +32,7 @@ myApp.controller('templateCtrl', ["$scope", "storage", "merge", "$routeParams", 
 		//$scope.templateForm.$setPristine();
 		$scope.$apply();
 	});
-  };
+  };*/
   
   $scope.merge = function () {
 	console.log("merge function");
@@ -50,7 +50,8 @@ myApp.controller('templateCtrl', ["$scope", "storage", "merge", "$routeParams", 
 		  savePromiseTemplate = null;
 		  storage.writeTemplate($scope.dataSource, $scope.template, function(result) {
 			if (result == "SUCCESS") {
-				$scope.IOmessage = "write succesful";
+				$scope.writeSuccess = true;
+				$scope.templateForm.$setPristine();
 				$scope.$apply();
 			}
 		  });
