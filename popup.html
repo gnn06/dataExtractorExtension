@@ -31,11 +31,12 @@
 		</div>
 		<div>
 		  <ul class="nav navbar-nav">
-			<li ng-class="$route.current.templateUrl == 'view/univers.html' ? 'active' : ''"><a href="#/univers/">Univers</a></li>
+			<li ng-class="$route.current.templateUrl == 'view/univers.html' ? 'active' : ''"><a href="#/univers/">Univers <span ng-show="$routeParams.univer" id="current-univer">: {{ $routeParams.univer }}</span></a></li>
 			<li ng-class="$route.current.templateUrl == 'view/data.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/data">Données</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/template.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/template">Template</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/extractors.html' || $route.current.templateUrl == 'view/extractor.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/extractors">Extracteurs</a></li>
 		  </ul>
+		  <p class="navbar-text navbar-right">Univer</p>
 		</div>
 	  </div>
 	</nav>

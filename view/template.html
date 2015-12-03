@@ -1,7 +1,5 @@
-Univer : {{ dataSource }}<br>
-
+<p>{{ nbItems }} item(s) merged</p>
 <form name="templateForm" id="templateForm">	
-	{{ nbItems }} item(s) merged<br>
 	Template : <span ng-show="templateForm.$dirty">Save needed</span><span id="IOmessage">{{ IOmessage }} </span>
 	<textarea ng-model="template" id="templateArea" style=""></textarea>
 </form>

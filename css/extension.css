@@ -19,3 +19,7 @@ textarea {
 #item-list, #templateForm {
 	margin-top: 1em;;
 }
+
+#current-univer {
+	font-weight: bold;
+}
