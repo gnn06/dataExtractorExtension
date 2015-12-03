@@ -13,17 +13,20 @@
 </table>
 	
 <input id="extractbutton" type="button" class="btn btn-default" value="Extract" ng-click="extract()" />
-<span id="IOmessage">{{ IOmessage}} </span><br>
+<span id="IOmessage">{{ IOmessage}} </span>
 
-JSON : <span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
+<span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
 		<span ng-message="id">An id is required</span>
 	   </span>
 	   <br/>
 	   
 <form name="myForm" novalidate>
-	<textarea type="textarea" name="jsonArea" id="jsonArea"
+    <div class="form-group">
+		<label for="jsonArea">JSON</label>
+		<textarea type="textarea" name="jsonArea" id="jsonArea"
 			  ng-model='model.currentItem'
 			  json-text> </textarea>
+	</div>
 	<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"
 		   ng-disabled="myForm.$invalid"/>
 </form>
