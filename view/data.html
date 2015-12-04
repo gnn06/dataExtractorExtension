@@ -22,6 +22,7 @@
 <div class="form-group">
 	<input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()" />
 	<input id="refreshbutton" type="button" class="btn btn-default" value="Réactualiser" ng-click="refresh()" />
+	<span ng-show="model.currentIndex == -1">Nouvelle donnée</span>
 	<span id="IOmessage">{{ IOmessage}} </span>
 	<span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
 		<span ng-message="id">An id is required</span>
