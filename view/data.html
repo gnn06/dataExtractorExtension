@@ -17,13 +17,19 @@
 			<a href ng-click="delete($index)" ><i class="glyphicon  glyphicon-trash"></i></a>
 		</td>
 	</tr>
+	<tr>
+		<td><a ng-click="create()">Ajouter une donnée</a></td>
+		<td></td>
+		<td></td>
+	</tr>
 </table>
 	
 <div class="form-group">
 	<input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()" />
 	<input id="refreshbutton" type="button" class="btn btn-default" value="Réactualiser" ng-click="refresh()" />
 	<span ng-show="model.currentIndex == -1">Nouvelle donnée</span>
-	<span id="IOmessage">{{ IOmessage}} </span>
+	<span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
+	<span ng-show="writeSuccess && myForm.$pristine">Modification sauvegardée</span>
 	<span ng-messages="myForm.jsonArea.$error" style="color:red" role="alert">
 		<span ng-message="id">An id is required</span>
 	</span>
@@ -35,7 +41,7 @@
 		<label for="jsonArea">JSON</label>
 		<textarea type="textarea" name="jsonArea" id="jsonArea"
 			  ng-model='model.currentItem'
-			  json-text> </textarea>
+			  json-text placeholder="Cliquez sur Extraire ..."> </textarea>
 	</div>
 	<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"
 		   ng-disabled="myForm.$invalid"/>

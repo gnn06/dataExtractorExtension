@@ -16,7 +16,6 @@ myApp.controller('dataCtrl',
 	storage.readItems(dataSource, function(result) {
 		if (result != null) {
 			$scope.model.items = result;
-			$scope.IOmessage = $scope.model.items.length + "item(s) readed";
 			/* apply necessary because we are into a callback */
 			$scope.$apply();
 		}
@@ -28,7 +27,7 @@ myApp.controller('dataCtrl',
 	var items = $scope.model.items;
 	storage.writeItems(dataSource, items, function(result) {
 		if (result == "SUCCESS") {
-			$scope.IOmessage = "write succesful";
+			$scope.writeSuccess = true;
 			$scope.$apply();
 		}
 	});
@@ -78,6 +77,10 @@ myApp.controller('dataCtrl',
   
   $scope.extract = function () {
 	extract(function(result){;
+	  if ($scope.model.currentItem != null && result.url != $scope.model.currentItem.url){
+        alert('La page courante ne correspond pas à la source de la donnée courante.');
+		return;
+      }
 	  $scope.model.currentItem = result;
 	  $scope.$apply();
 	})
@@ -85,13 +88,21 @@ myApp.controller('dataCtrl',
   
   $scope.refresh = function () {
 	extract(function(result){
+	  if ($scope.model.currentItem != null && result.url != $scope.model.currentItem.url){
+        alert('La page courante ne correspond pas à la source de la donnée courante.');
+		return;
+      }	  
 	  var temp = {};
 	  merge.refresh(temp, $scope.model.currentItem);
 	  merge.refresh(temp, result);
 	  $scope.model.currentItem = temp;
 	  $scope.$apply();
 	});
-	$scope.$apply($scope.model.currentItem.poids = 100000);
+  };
+  
+  $scope.create = function () {
+	$scope.model.currentIndex = -1;
+	$scope.model.currentItem = undefined;
   };
   
   /* initialise items and template */
@@ -110,7 +121,7 @@ myApp.controller('dataCtrl',
 		  storage.writeItems($scope.dataSource, $scope.model.items, function(result) {
 			if (result == "SUCCESS") {
 				$scope.writeSuccess = true;
-				$scope.IOmessage = "write succesful";
+				$scope.myForm.$setPristine();
 				$scope.$apply();
 			}
 		  });
