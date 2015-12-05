@@ -10,12 +10,13 @@
     </div>    
     
     <div class="form-group">        
-        <input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()"
+        <input id="extractbutton" type="button" class="btn btn-default" value="Tester extracteur" ng-click="extract()"
         ng-disabled="myForm.codeToInjectArea.$invalid"/>
         <input type="button" class="btn btn-default" value="Sauver code" ng-click="write()"
             ng-disabled="myForm.$invalid"/>
         <a ng-hide="extractor.urlexample == undefined" href="{{extractor.urlexample}}" target="_blank">open example</a>
-        <span ng-show="myForm.$dirty && myForm.$prestine">Sauvegarde nécessaire</span>
+        <span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
+        <span ng-show="writeSuccess && myForm.$pristine">Modification sauvegardée</span>
     </div>
 
     <div class="form-group">

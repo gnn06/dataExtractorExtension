@@ -46,6 +46,7 @@ myApp.controller('extractorCtrl',
 	  storage.writeCode($scope.univer, $scope.extractorId, oldId, $scope.extractor, function(result) {
 		if (result == "SUCCESS") {
 		  oldId = $scope.extractorId;
+		  $scope.writeSuccess = true;
 		  $scope.myForm.$setPristine();
 		  $scope.$apply();
 		}
