@@ -36,13 +36,3 @@ myApp.config( [
         // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
     }
 ]);
-
-myApp.controller('universCtrl', ["$scope", "storage", function ($scope, storage) {
- 
-  storage.readUniver(function(result) {
-	  if (result != null) {
-		$scope.univers = result;
-		$scope.$apply();
-	  }
-  });  
-}]);

@@ -64,6 +64,8 @@ myApp.factory('storage', function() {
             });
         },
         
+        //---------------------------------------------------------------------
+        
         readUniver : function (callback) {
             chrome.storage.local.get(["univers"], function(object) {
                 if (chrome.runtime.lastError) {
@@ -74,6 +76,14 @@ myApp.factory('storage', function() {
                     var result = object.univers;
                     callback(result);
                 }
+            });
+        },
+        
+        writeUniver : function (univer, callback) {
+            var service = this;
+            this.read(null, "univers", function (result) {
+                result.push(univer);
+                service.write(null, "univers", result, callback);
             });
         },
         
@@ -134,13 +144,16 @@ myApp.factory('storage', function() {
         //---------------------------------------------------------------------
 
         read : function (dataSource, key, callback) {
-            chrome.storage.local.get([dataSource + "." + key], function(object) {
+            if (dataSource != null) {
+                key = dataSource + "." + key;
+            }
+            chrome.storage.local.get([key], function(object) {
                 if (chrome.runtime.lastError) {
                     console.log("template read error");
                     callback("ERROR");
                 } else {
                     console.log("template read succesful");
-                    var result = object[dataSource + "." + key];
+                    var result = object[key];
                     callback(result);
                 }
             });
@@ -148,7 +161,10 @@ myApp.factory('storage', function() {
         
         write : function (dataSource, key, value, callback) {
             var valuePair = { };
-            valuePair[dataSource + "." + key] = value;
+            if (dataSource != null) {
+                key = dataSource + "." + key;
+            }
+            valuePair[key] = value;
             chrome.storage.local.set(valuePair, function() {
                 // Notify that we saved.*
                 if (chrome.runtime.lastError) {
