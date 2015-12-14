@@ -65,14 +65,17 @@ myApp.controller('dataCtrl',
   	var mainWindow = BP.mainWindow;
   	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
       var url = tab[0].url;
-  	  var tabid = tab[0].id;
-  	  storage.readCodeByURL($scope.dataSource, url, function(result) {
-    		injector.extract(result.code, mainWindow, tabid, function(result){
-    		  result.url = url;
-    		  callback(result);
-    		});
-  	  });
-  	});
+	  var tabid = tab[0].id;
+	  storage.readCodeByURL($scope.dataSource, url, function(result) {
+		if (result == null) {
+            result = { code : "" };
+        }
+		injector.extract(result.code, mainWindow, tabid, function(result){
+		  result.url = url;
+		  callback(result);
+		});
+	  });
+	});
   }
 
   $scope.extract = function () {
