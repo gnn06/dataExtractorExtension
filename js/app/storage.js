@@ -1,8 +1,8 @@
 myApp.factory('storage', function() {
-    
+
 	// TODO sauvegarder le template dans l'univers
-	
-    var service = {    
+
+    var service = {
         readItems : function  (dataSource, callback) {
             chrome.storage.local.get([dataSource + ".items"], function(objects) {
                 if (chrome.runtime.lastError) {
@@ -11,17 +11,17 @@ myApp.factory('storage', function() {
                     return ;
                 } else {
                     console.log("get succesful");
-                    var result = objects[dataSource + ".items"];			
+                    var result = objects[dataSource + ".items"];
                     callback(result);
                 }
             });
         },
-        
+
         writeItems: function (dataSource, items, callback) {
             // var url = $window.location.ref;
             // var regExpResult = new RegExp("/https?://(.+)/").exec(url);
             // var pageSetID = regExpResult[0];
-              
+
             var value = { };
             value[dataSource + ".items"] = items;
             chrome.storage.local.set(value, function() {
@@ -35,7 +35,7 @@ myApp.factory('storage', function() {
                 }
             });
         },
-        
+
         readTemplate : function (dataSource, callback) {
             chrome.storage.local.get([dataSource + ".template"], function(object) {
                 if (chrome.runtime.lastError) {
@@ -48,7 +48,7 @@ myApp.factory('storage', function() {
                 }
             });
         },
-        
+
         writeTemplate : function (dataSource, template, callback) {
             var value = { };
             value[dataSource + ".template"] = template;
@@ -63,9 +63,9 @@ myApp.factory('storage', function() {
                 }
             });
         },
-        
+
         //---------------------------------------------------------------------
-        
+
         readUniver : function (callback) {
             chrome.storage.local.get(["univers"], function(object) {
                 if (chrome.runtime.lastError) {
@@ -74,21 +74,21 @@ myApp.factory('storage', function() {
                 } else {
                     console.log("univer read succesful");
                     var result = object.univers;
-                    callback(result);
+					callback(result);
                 }
             });
         },
-        
+
         writeUniver : function (univer, callback) {
             var service = this;
             this.read(null, "univers", function (result) {
-                result.push(univer);
+				result.push(univer);
                 service.write(null, "univers", result, callback);
             });
         },
-        
+
         //---------------------------------------------------------------------
-        
+
         readCodeList : function (dataSource, callback) {
             chrome.storage.local.get(null, function(objects) {
                 var result = new Array();
@@ -105,7 +105,7 @@ myApp.factory('storage', function() {
                 callback(result);
             });
         },
-        
+
         readCodeByURL : function (dataSource, url, callback) {
             chrome.storage.local.get(null, function(objects) {
                 var result = new Array();
@@ -115,7 +115,7 @@ myApp.factory('storage', function() {
                     if (i > -1 && j == 0) {
                         var code = objects[attrname];
                         if (url.indexOf(code.urlpattern) > -1) {
-                            callback(code);
+                            result = code;
                         }
                     }
                 }
@@ -125,7 +125,7 @@ myApp.factory('storage', function() {
                 callback(result);
             });
         },
-        
+
         readCode : function (dataSource, id, callback) {
             this.read(dataSource, "code." + id, callback);
         },
@@ -136,11 +136,11 @@ myApp.factory('storage', function() {
                 this.deleteCode(univer, oldId, callback);
             }
         },
-        
+
         deleteCode : function (univer, id, callback) {
             this.delete(univer, "code." + id, callback);
         },
-        
+
         //---------------------------------------------------------------------
 
         read : function (dataSource, key, callback) {
@@ -153,12 +153,15 @@ myApp.factory('storage', function() {
                     callback("ERROR");
                 } else {
                     console.log("template read succesful");
-                    var result = object[key];
-                    callback(result);
+					var result = object[key];
+                    if (result == undefined) {
+						result = new Array();
+					}
+					callback(result);
                 }
             });
         },
-        
+
         write : function (dataSource, key, value, callback) {
             var valuePair = { };
             if (dataSource != null) {
@@ -176,7 +179,7 @@ myApp.factory('storage', function() {
                 }
             });
         },
-        
+
         delete : function (univer, key, callback) {
             chrome.storage.local.remove([univer + "." + key],
                 function() {
@@ -188,7 +191,7 @@ myApp.factory('storage', function() {
                     }
                 });
         }
-        
+
 	};
 
   return service;

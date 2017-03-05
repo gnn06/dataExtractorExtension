@@ -18,12 +18,12 @@ myApp.directive('jsonText', function() {
         link: function(scope, element, attr, ngModel) {
 		 /* désactive la validation pour les objects avec tableau qui n'ont pas d'ID */
 		 ngModel.$validators.id = function(value) {
-		 	console.log(value);
+      // nsole.log(value);
 			if (value == undefined) {
 				return true;
 			} else {
 				return value.hasOwnProperty("id");
-			}			
+			}
 		 };
 		 function into(input) {
 			return JSON.parse(input);
@@ -36,4 +36,3 @@ myApp.directive('jsonText', function() {
         }
     };
 });
-

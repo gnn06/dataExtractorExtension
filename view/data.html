@@ -5,14 +5,14 @@
 			<th>Site</th>
 			<th>Id</th>
 			<th>Action</th>
-		</tr>	
+		</tr>
 	</thead>
 	<!-- tracking neeeded to make add working -->
 	<tr ng-repeat="item in model.items track by item.url">
 		<td>{{ item.url | domain }}</td>
 		<td>{{ item.id }}</td>
 		<td>
-			<a href ng-click="view($index)" >json</a>		
+			<a href ng-click="view($index)" >json</a>
 			<a href="{{ item.url }}" target="_blank"><i class="glyphicon  glyphicon-globe"></i></a>
 			<a href ng-click="delete($index)" ><i class="glyphicon  glyphicon-trash"></i></a>
 		</td>
@@ -23,10 +23,11 @@
 		<td></td>
 	</tr>
 </table>
-	
+
 <div class="form-group">
 	<input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()" />
 	<input id="refreshbutton" type="button" class="btn btn-default" value="Réactualiser" ng-click="refresh()" />
+	<input id="refreshallbutton" type="button" class="btn btn-default" value="Réactualiser tout" ng-click="refreshAll()" />
 	<span ng-show="model.currentIndex == -1">Nouvelle donnée</span>
 	<span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
 	<span ng-show="writeSuccess && myForm.$pristine">Modification sauvegardée</span>
@@ -35,7 +36,7 @@
 	</span>
 </div>
 
-	   
+
 <form name="myForm" novalidate>
     <div class="form-group">
 		<label for="jsonArea">JSON</label>
