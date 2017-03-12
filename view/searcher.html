@@ -1,0 +1,41 @@
+<form name="myForm">
+    <div class="form-group">
+        <label for="searcherId">Identifiant</label>
+        <input type="text" name="id" class="form-control" id="searcherId" placeholder="Identifiant" ng-model="searcherId" required>
+    </div>
+
+    <div class="form-group">
+      <label for="url-pattern">URL search</label>
+      <input name="search-url-pattern" id="search-url-pattern" type="text" ng-model="searcher.searchurlpattern"
+             class="form-control" placeholder="http://www.domain.com/pattern" required/>
+    </div>
+
+    <div class="form-group">
+        <input type="button" class="btn btn-default" value="Sauver code" ng-click="write()"
+            ng-disabled="myForm.$invalid"/>
+        <span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
+        <span ng-show="writeSuccess && myForm.$pristine">Modification sauvegardée</span>
+    </div>
+
+    <div class="form-group">
+        <label for="searchCodeToInjectArea">Code de recherche à injecter</label>
+        <textarea name="searchCodeToInjectArea" id="searchCodeToInjectArea"
+                  class="form-control" rows="5"
+                  placeholder="result.property = 12;"
+                  required
+                  ng-model="searcher.searchCode" ></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="itemsToSearchArea">Element à rechercher</label>
+        <textarea name="itemsToSearchArea" id="itemsToSearch"
+                  class="form-control" rows="5"
+                  placeholder="item1
+item2"
+                  required
+                  ng-model="itemsToSearch" ></textarea>
+    </div>
+
+    <input id="searchextractbutton" type="button" class="btn btn-default" value="Tester searcher" ng-click="search()"
+              ng-disabled="myForm.itemsToSearchArea.$invalid"/>
+</form>

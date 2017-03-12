@@ -1,5 +1,7 @@
 <p>Données</p>
-<table class="table table-condensed" id="item-list">
+<input type="text" name="searchText" class="form-control" id="searchText" placeholder="Filtre" ng-model="searchText">
+<div id="datatable" class="form-group">
+<table class="table table-condensed" id="item-list" style="max-height:100px">
 	<thead>
 		<tr>
 			<th>Site</th>
@@ -8,26 +10,25 @@
 		</tr>
 	</thead>
 	<!-- tracking neeeded to make add working -->
-	<tr ng-repeat="item in model.items track by item.url">
+	<tr ng-repeat="item in model.items | filter : searchText track by item.url">
 		<td>{{ item.url | domain }}</td>
 		<td>{{ item.id }}</td>
 		<td>
-			<a href ng-click="view($index)" >json</a>
+			<a href ng-click="view(item)" >json</a>
 			<a href="{{ item.url }}" target="_blank"><i class="glyphicon  glyphicon-globe"></i></a>
-			<a href ng-click="delete($index)" ><i class="glyphicon  glyphicon-trash"></i></a>
+			<a href ng-click="delete(item.url)" ><i class="glyphicon  glyphicon-trash"></i></a>
 		</td>
 	</tr>
-	<tr>
-		<td><a ng-click="create()">Ajouter une donnée</a></td>
-		<td></td>
-		<td></td>
-	</tr>
 </table>
+</div>
+<a ng-click="create()">Ajouter une donnée</a>
 
 <div class="form-group">
 	<input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()" />
-	<input id="refreshbutton" type="button" class="btn btn-default" value="Réactualiser" ng-click="refresh()" />
+	<input id="extracttabsbutton" type="button" class="btn btn-default" value="Extraire onglets" ng-click="extractTabs()" />
+	<input id="refreshtabsbutton" type="button" class="btn btn-default" value="Réactualiser onglets" ng-click="refreshTabs()" />
 	<input id="refreshallbutton" type="button" class="btn btn-default" value="Réactualiser tout" ng-click="refreshAll()" />
+	<input id="searchbutton" type="button" class="btn btn-default" value="Chercher tout" ng-click="searchAll()" />
 	<span ng-show="model.currentIndex == -1">Nouvelle donnée</span>
 	<span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
 	<span ng-show="writeSuccess && myForm.$pristine">Modification sauvegardée</span>

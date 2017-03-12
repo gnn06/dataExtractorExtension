@@ -15,6 +15,7 @@
 	<script src="js/app/templateCtrl.js"></script>
 	<script src="js/app/headerCtrl.js"></script>
 	<script src="js/app/extractorCtrl.js"></script>
+  <script src="js/app/searcherCtrl.js"></script>
 	<!--script src="js/lib/jquery.min.js"></script-->
     <!--script src="popup.js"></script-->
     <!--script src="js/app/itemStorage.js"></script-->
@@ -36,6 +37,7 @@
 			<li ng-class="$route.current.templateUrl == 'view/data.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/data">Données</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/template.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/template">Template</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/extractors.html' || $route.current.templateUrl == 'view/extractor.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/extractors">Extracteurs</a></li>
+      <li ng-class="$route.current.templateUrl == 'view/searchers.html' || $route.current.templateUrl == 'view/search.html' ? 'active' : ''"><a href="#/univers/{{$routeParams.univer}}/searchers">Searchers</a></li>
 		  </ul>
 		</div>
 	  </div>

@@ -1,6 +1,14 @@
 myApp.factory('storage', function() {
 
-	// TODO sauvegarder le template dans l'univers
+  /*
+   * univer1.code.extractor2 = { code : string, urlPattern : string }
+   * univer1.items = [ { ... } ]
+   * univer1.searcher.searcher1 = { searchCode : string, searchUrlPAttern : string }
+   * univer1.template = "html"
+   * univers = [ "univer1" ]
+   */
+
+  // TODO sauvegarder le template dans l'univers
 
     var service = {
         readItems : function  (dataSource, callback) {
@@ -90,20 +98,7 @@ myApp.factory('storage', function() {
         //---------------------------------------------------------------------
 
         readCodeList : function (dataSource, callback) {
-            chrome.storage.local.get(null, function(objects) {
-                var result = new Array();
-                for (var attrname in objects) {
-                    var i = attrname.indexOf(".code.");
-                    var j = attrname.indexOf(dataSource);
-                    if (i > -1 && j == 0) {
-                        result.push(attrname.substring(i + 6));
-                    }
-                }
-                if (result.length == 0) {
-                    result = null;
-                }
-                callback(result);
-            });
+            this.readList(dataSource, "code", callback);
         },
 
         readCodeByURL : function (dataSource, url, callback) {
@@ -142,6 +137,50 @@ myApp.factory('storage', function() {
         },
 
         //---------------------------------------------------------------------
+
+        readSearcherList : function (dataSource, callback) {
+            this.readList(dataSource, "searcher", callback);
+        },
+
+        /**
+         * @return { searchCode : string, searchUrlPattern : string }
+         */
+        readSearcher : function (dataSource, id, callback) {
+            this.read(dataSource, "searcher." + id, callback);
+        },
+
+        /**
+         * @param { searchCode : string, searchUrlPattern : string }
+         */
+        writeSearcher : function (univer, id, oldId, searcher, callback) {
+            this.write(univer, "searcher." + id, searcher, callback);
+            if (oldId != id) {
+                this.deleteSearcher(univer, oldId, callback);
+            }
+        },
+
+        deleteSearcher : function (univer, id, callback) {
+            this.delete(univer, "searcher." + id, callback);
+        },
+
+        //---------------------------------------------------------------------
+
+        readList : function (dataSource, key, callback) {
+            chrome.storage.local.get(null, function(objects) {
+                var result = new Array();
+                for (var attrname in objects) {
+                    var i = attrname.indexOf("." + key + ".");
+                    var j = attrname.indexOf(dataSource);
+                    if (i > -1 && j == 0) {
+                        result.push(attrname.substring(i + ("." + key + ".").length));
+                    }
+                }
+                if (result.length == 0) {
+                    result = null;
+                }
+                callback(result);
+            });
+        },
 
         read : function (dataSource, key, callback) {
             if (dataSource != null) {

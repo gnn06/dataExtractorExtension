@@ -22,6 +22,14 @@ myApp.config(function($routeProvider, $locationProvider) {
 	templateUrl : "view/extractor.html",
 	controller : "extractorCtrl"
   })
+  .when("/univers/:univer/searchers", {
+	templateUrl : "view/searchers.html",
+	controller : "searcherListCtrl"
+  })
+  .when("/univers/:univer/searcher/:searcher?", {
+	templateUrl : "view/searcher.html",
+	controller : "searcherCtrl"
+  })
   .otherwise({redirectTo: '/univers/'});
 });
 
@@ -31,7 +39,7 @@ myApp.config(function($routeProvider, $locationProvider) {
 myApp.config( [
     '$compileProvider',
     function( $compileProvider )
-    {   
+    {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
         // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
     }

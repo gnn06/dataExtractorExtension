@@ -1,0 +1,16 @@
+<p>Choissisez un searcher</p>
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Searcher</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tr ng-repeat="id in searchers">
+		<td><a href="#/univers/{{univer}}/searcher/{{id}}">{{id}}</a></td>
+		<td><a href ng-click="delete(id)" ><i class="glyphicon  glyphicon-trash"></i></a></td>
+	<tr>
+		<td><a href="#/univers/{{univer}}/searcher/">ajouter un searcher</a></td>
+		<td></td>
+	</tr>
+</table>

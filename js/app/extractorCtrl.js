@@ -1,9 +1,9 @@
 myApp.controller('extractorListCtrl',
   ["$scope", 'storage', '$routeParams',
   function ($scope, storage, $routeParams) {
-  
+
   $scope.univer = $routeParams.univer;
-  
+
   $scope.read = function () {
 	storage.readCodeList($routeParams.univer, function(result) {
 		if (result != null) {
@@ -12,14 +12,14 @@ myApp.controller('extractorListCtrl',
 		}
     });
   };
-	
+
   $scope.read();
-  
+
   $scope.delete = function (id) {
 	storage.deleteCode($scope.univer, id, function(result) {});
 	$scope.read();
   };
-  
+
 }]);
 
 myApp.controller('extractorCtrl',
@@ -27,10 +27,10 @@ myApp.controller('extractorCtrl',
   function ($scope, $timeout, storage, $routeParams, injector)
   {
     var oldId = null;
-	
+
 	$scope.univer = $routeParams.univer;
 	// $routeParams.extractorId
-	
+
 	if ($routeParams.extractor != undefined) {
 	  storage.readCode($scope.univer, $routeParams.extractor, function(result) {
 		if (result != null) {
@@ -52,24 +52,23 @@ myApp.controller('extractorCtrl',
 		}
 	  });
 	};
-	
+
 	$scope.extract = function () {
 	  var BP = chrome.extension.getBackgroundPage();
 	  var mainWindow = BP.mainWindow;
 	  chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
-		var codeToInject = $scope.extractor.code;
-		injector.extract(codeToInject, mainWindow, tab[0].id, function(result/*request, sender, sendResponse*/) {
-		  $scope.resultJSON = result;
-		  if ($scope.extractor.urlpattern == undefined) {
-		      $scope.extractor.urlexample = tab[0].url;
-		      $scope.extractor.urlpattern = tab[0].url;
-		      $scope.$apply();
-		  }
-		  $scope.$apply();
-		});
+  		var codeToInject = $scope.extractor.code;
+  		injector.extract(codeToInject, mainWindow, tab[0].id, function(result/*request, sender, sendResponse*/) {
+  		  $scope.resultJSON = result;
+  		  if ($scope.extractor.urlpattern == undefined) {
+  		      $scope.extractor.urlexample = tab[0].url;
+  		      $scope.extractor.urlpattern = tab[0].url;
+  		      $scope.$apply();
+  		  }
+  		  $scope.$apply();
+  		});
 	  });
 	};
-
   }]
 
 );

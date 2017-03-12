@@ -23,3 +23,8 @@ textarea {
 #current-univer {
 	font-weight: bold;
 }
+
+#datatable {
+	max-height: 50%;
+	overflow: scroll;
+}

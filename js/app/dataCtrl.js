@@ -33,18 +33,28 @@ myApp.controller('dataCtrl',
 	});
   };
 
+  function indexOfItem(itemToSearch) {
+    for (var i = 0; i < $scope.model.items.length; i++) {
+      var item = $scope.model.items[i];
+      if (item == itemToSearch) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   $scope.view = function (index) {
 	  $scope.model.currentIndex = index;
-	  $scope.model.currentItem = $scope.model.items[index];
+	  $scope.model.currentItem = $scope.model.items[indexOfItem(index)];
   };
 
   $scope.open = function (index) {
-	  var newURL = $scope.model.items[index].url;
+	  var newURL = index.url;
 	  chrome.tabs.create({ url: newURL });
   };
 
   $scope.delete = function (index) {
-	  $scope.model.items.splice(index, 1);
+	  $scope.model.items.splice(indexOfItem(index), 1);
   };
 
   $scope.commit = function () {
@@ -86,47 +96,106 @@ myApp.controller('dataCtrl',
 		})
   };
 
-  $scope.refresh = function () {
-  	extract(function(result){
-		  // console.log('into refresh callback');
-  	  if ($scope.model.currentItem != null && result.url != $scope.model.currentItem.url){
-          alert('La page courante ne correspond pas à la source de la donnée courante.');
-  		    return;
+  $scope.extractTabs = function () {
+    var BP = chrome.extension.getBackgroundPage();
+    var mainWindow = BP.mainWindow;
+    chrome.tabs.query({windowId : mainWindow}, function(tabs) {
+      for (var i = 0; i < tabs.length; i++) {
+        let url = tabs[i].url;
+    	  let tabid = tabs[i].id;
+    	  storage.readCodeByURL($scope.dataSource, url, function(result) {
+      		injector.extract(result.code, mainWindow, tabid, function(result){
+            result.url = url;
+            var id = prompt("id à utiliser ?" + result.titre);
+            result.id = id;
+            $scope.model.items.push(result);
+      			$scope.$apply();
+      		});
+    	  });
       }
-  	  var temp = {};
-  	  merge.refresh(temp, $scope.model.currentItem);
-  	  merge.refresh(temp, result);
-  	  $scope.model.currentItem = temp;
-  	  $scope.$apply();
-  	});
+    });
+  };
+
+  function searchItemByURL (url) {
+    for (var i = 0; i < $scope.model.items.length; i++) {
+      var item = $scope.model.items[i];
+      if (item.url == url) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  $scope.refreshTabs = function () {
+    var BP = chrome.extension.getBackgroundPage();
+    var mainWindow = BP.mainWindow;
+    chrome.tabs.query({windowId : mainWindow}, function(tabs) {
+      for (var i = 0; i < tabs.length; i++) {
+        let url = tabs[i].url;
+    	  let tabid = tabs[i].id;
+        storage.readCodeByURL($scope.dataSource, url, function(result) {
+      		injector.extract(result.code, mainWindow, tabid, function(result) {
+            var index = searchItemByURL(url);
+            if (index != -1) {
+              var temp = $scope.model.items[index]
+              merge.refresh(temp, result);
+              $scope.model.items[index] = temp;
+              console.log('refresh for ' + url);
+              if ($scope.model.currentIndex == index) {
+                console.log('ui refresh');
+                $scope.model.currentItem = temp;
+                $scope.$apply();
+              }
+            }
+          });
+        });
+      }
+    });
   };
 
   $scope.refreshAll = function () {
+    var BP = chrome.extension.getBackgroundPage();
+    var mainWindow = BP.mainWindow;
     for (let i = 0; i < $scope.model.items.length; i++) {
-  		var BP = chrome.extension.getBackgroundPage();
-  		var mainWindow = BP.mainWindow;
   		let newURL = $scope.model.items[i].url;
-  		chrome.tabs.create({ url: newURL }, function(tab){
-  			var tabid = tab.id;
-  			storage.readCodeByURL($scope.dataSource, newURL, function(result) {
-  				injector.extract(result.code, mainWindow, tabid, function(result) {
-  					result.url = newURL;
-  					var temp = {};
-  					merge.refresh(temp, $scope.model.items[i]);
-  					merge.refresh(temp, result);
-  					$scope.model.items[i] = temp;
-  					console.log('refresh for ' + newURL);
-  					chrome.tabs.remove([tabid]);
+  		chrome.tabs.create({ url: newURL }, function (tab) {
+        var url = tab.url;
+    	  var tabid = tab.id;
+        storage.readCodeByURL($scope.dataSource, url, function(result) {
+      		injector.extract(result.code, mainWindow, tabid, function(result){
+            var temp = {};
+            merge.refresh(temp, $scope.model.items[i]);
+            merge.refresh(temp, result);
+            $scope.model.items[i] = temp;
+            console.log('refresh for ' + newURL);
             if ($scope.model.currentIndex == i) {
               console.log('ui refresh');
               $scope.model.currentItem = temp;
               $scope.$apply();
             }
-  				});
-  			});
-  		});
-   }
-  //  $scope.$apply();
+            chrome.tabs.remove([tabid]);
+        	});
+    	  });
+      });
+    }
+  };
+
+  $scope.searchAll = function () {
+    var BP = chrome.extension.getBackgroundPage();
+    var mainWindow = BP.mainWindow;
+    storage.readCode($scope.dataSource, "amazonsmartphone", function(result) {
+      var newURL = result.searchurlpattern;
+      for (let i = 0; i < $scope.model.items.length; i++) {
+        chrome.tabs.create({ url: newURL }, function(tab) {
+          var tabid = tab.id;
+          var toSearch = $scope.model.items[i].titre;
+          var codeToInject = result.searchCode.repeat(1);
+          codeToInject = codeToInject.replace("SEARCH", toSearch);
+          injector.extract(codeToInject, mainWindow, tabid, function(result) {
+          });
+        });
+      }
+    });
   };
 
   $scope.create = function () {

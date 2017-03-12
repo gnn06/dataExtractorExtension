@@ -21,13 +21,13 @@ myApp.factory('merge', function() {
                     if (item1.id == item2.id) {
                         this.mergeTwoItems(item1, item2);
                         result.splice(j, 1);
-                        break;
+                        j--;
                     }
                 }
             }
             return result;
         },
-        
+
         mergeItemCollection : function (itemToMerge, collection) {
             var found = false;
             for (var i  = 0; i < collection.length; i++) {
@@ -40,7 +40,7 @@ myApp.factory('merge', function() {
             }
             return false;
         },
-        
+
         mergeTwoItems : function (item1, item2) {
             for (var attrname in item2) {
                 if (item1.hasOwnProperty(attrname) == false) {
@@ -49,14 +49,14 @@ myApp.factory('merge', function() {
             }
             return item1;
         },
-        
+
         refresh : function (dst, src) {
             for (var attrname in src) {
                 dst[attrname] = src[attrname];
             }
             return dst;
         },
-        
+
         mergeTwoCollections : function (callback) {
             var zeperfs = null;
             var autoplus = null;
