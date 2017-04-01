@@ -44,6 +44,7 @@
 		<label for="jsonArea">JSON</label>
 		<textarea type="textarea" name="jsonArea" id="jsonArea"
 			  ng-model='model.currentItem'
+			  ng-model-options="{ allowInvalid: true }"
 			  json-text placeholder="Cliquez sur Extraire ..."> </textarea>
 	</div>
 	<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"
