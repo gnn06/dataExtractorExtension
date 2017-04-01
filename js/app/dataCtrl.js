@@ -22,17 +22,6 @@ myApp.controller('dataCtrl',
 	});
   };
 
-  $scope.write = function () {
-	var dataSource = $scope.dataSource;
-	var items = $scope.model.items;
-	storage.writeItems(dataSource, items, function(result) {
-		if (result == "SUCCESS") {
-			$scope.writeSuccess = true;
-			$scope.$apply();
-		}
-	});
-  };
-
   function indexOfItem(itemToSearch) {
     for (var i = 0; i < $scope.model.items.length; i++) {
       var item = $scope.model.items[i];
@@ -87,7 +76,7 @@ myApp.controller('dataCtrl',
 
   $scope.extract = function () {
 	   extract(function(result){
-			if ($scope.model.currentItem != null && result.url != $scope.model.currentItem.url){
+			if ($scope.model.currentItem != null && $scope.model.currentItem.url != null && result.url != $scope.model.currentItem.url){
 				alert('La page courante ne correspond pas à la source de la donnée courante.');
 				return;
 			}
@@ -209,6 +198,21 @@ myApp.controller('dataCtrl',
   $scope.$watch("model.items", $scope.merge, true);
 
   var savePromiseItems = null;
+  
+  /**
+   * obsolète, utile pour sauvegarde manuelle versus automatique
+   */
+  $scope.write = function () {
+	var dataSource = $scope.dataSource;
+	var items = $scope.model.items;
+	storage.writeItems(dataSource, items, function(result) {
+		if (result == "SUCCESS") {
+			$scope.writeSuccess = true;
+			$scope.$apply();
+		}
+	});
+  };
+  
   $scope.$watch("model.items", function() {
       if (savePromiseItems != null)  {
 		   $timeout.cancel(savePromiseItems);
@@ -225,5 +229,34 @@ myApp.controller('dataCtrl',
 		  });
 	}, 3000, false);
   }, true);
+  
+  $scope.refreshJsonArea = function () {
+	  console.log("dans refreshJsonArea");
+	  var ctrl = $scope.myForm.jsonArea;
+	  var modelValue = ctrl.$modelValue;
+	  var viewValue  = ctrl.$viewValue;
 
+      /** détermine la viewValue pour la modelValue actuelle.
+	   *  Si different alors la view est désynchro, un refresh graphique est nécessaire.
+	   *  Le controller de la jsonArea a pu être changé par l'input de l'ID.
+	   *	 
+	   *  Le listerner ngChange est lancé :
+	   *    - après que le controller et le scope aient été mis à jour
+	   *    - avant les $watch.		  
+	   *	  
+	   *  Copier-Coller de ngModelController.$watch
+	   */	   
+	  var formatters = ctrl.$formatters,
+          idx = formatters.length;
+
+      var viewValue = modelValue;
+      while (idx--) {
+        viewValue = formatters[idx](viewValue);
+      }
+      if (ctrl.$viewValue !== viewValue) {
+        ctrl.$viewValue = ctrl.$$lastCommittedViewValue = viewValue;
+        ctrl.$render();
+		ctrl.$$runValidators(modelValue, viewValue, ctrl.noop);
+	  }	  
+  };
 }]);

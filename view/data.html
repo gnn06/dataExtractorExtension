@@ -40,6 +40,7 @@
 
 <form name="myForm" novalidate>
     <div class="form-group">
+		<input ng-change="refreshJsonArea()" type="text" name="id" class="form-control" id="id" placeholder="Identifiant" ng-model="model.currentItem.id">
 		<label for="jsonArea">JSON</label>
 		<textarea type="textarea" name="jsonArea" id="jsonArea"
 			  ng-model='model.currentItem'
