@@ -32,9 +32,11 @@ myApp.controller('dataCtrl',
     return -1;
   }
 
-  $scope.view = function (index) {
+  $scope.view = function (item) {
+	  var index = indexOfItem(item);
 	  $scope.model.currentIndex = index;
-	  $scope.model.currentItem = $scope.model.items[indexOfItem(index)];
+	  $scope.model.currentItem = {};
+	  angular.copy($scope.model.items[index], $scope.model.currentItem);
   };
 
   $scope.open = function (index) {
@@ -42,13 +44,13 @@ myApp.controller('dataCtrl',
 	  chrome.tabs.create({ url: newURL });
   };
 
-  $scope.delete = function (index) {
-	  $scope.model.items.splice(indexOfItem(index), 1);
+  $scope.delete = function (item) {
+	  $scope.model.items.splice(indexOfItem(item), 1);
   };
 
   $scope.commit = function () {
 	  if ($scope.model.currentIndex != -1) {
-			$scope.model.items[$scope.model.currentIndex] = $scope.model.currentItem;
+			angular.copy($scope.model.currentItem, $scope.model.items[$scope.model.currentIndex]);
 	  } else {
 			if ($scope.model.items == undefined) {
 				$scope.model.items = new Array();
