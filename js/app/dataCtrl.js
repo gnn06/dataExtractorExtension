@@ -35,7 +35,7 @@ myApp.controller('dataCtrl',
   $scope.view = function (item) {
 	  var index = indexOfItem(item);
 	  $scope.model.currentIndex = index;
-	  $scope.message = JSON.stringify($scope.model.items[index], null, 2);
+	  $scope.model.currentjson = JSON.stringify($scope.model.items[index], null, 2);
   };
 
   $scope.open = function (index) {
@@ -49,12 +49,12 @@ myApp.controller('dataCtrl',
 
   $scope.commit = function () {
 	  if ($scope.model.currentIndex != -1) {
-			$scope.model.items[$scope.model.currentIndex] = JSON.parse($scope.message);
+			$scope.model.items[$scope.model.currentIndex] = JSON.parse($scope.model.currentjson);
 	  } else {
 			if ($scope.model.items == undefined) {
 				$scope.model.items = new Array();
 			}
-			$scope.model.items.push(JSON.parse($scope.message));
+			$scope.model.items.push(JSON.parse($scope.model.currentjson));
 			$scope.model.currentIndex = $scope.model.items.length - 1;
 	  }
 	  $scope.IOmessage = "commited";
@@ -82,7 +82,7 @@ myApp.controller('dataCtrl',
 				alert('La page courante ne correspond pas à la source de la donnée courante.');
 				return;
 			}
-			$scope.message = JSON.stringify(result, null, 2);
+			$scope.model.currentjson = JSON.stringify(result, null, 2);
 			$scope.$apply();
 		})
   };
@@ -134,7 +134,7 @@ myApp.controller('dataCtrl',
               console.log('refresh for ' + url);
               if ($scope.model.currentIndex == index) {
                 console.log('ui refresh');
-                $scope.message = JSON.stringify(temp, null, 2);
+                $scope.model.currentjson = JSON.stringify(temp, null, 2);
                 $scope.$apply();
               }
             }
@@ -161,7 +161,7 @@ myApp.controller('dataCtrl',
             console.log('refresh for ' + newURL);
             if ($scope.model.currentIndex == i) {
               console.log('ui refresh');
-              $scope.message = JSON.stringify(temp, null, 2);
+              $scope.model.currentjson = JSON.stringify(temp, null, 2);
               $scope.$apply();
             }
             chrome.tabs.remove([tabid]);
@@ -191,7 +191,7 @@ myApp.controller('dataCtrl',
 
   $scope.create = function () {
 	$scope.model.currentIndex = -1;
-	$scope.message = "";
+	$scope.model.currentjson = "";
   };
 
   /* initialise items and template */
@@ -261,8 +261,5 @@ myApp.controller('dataCtrl',
 		ctrl.$$runValidators(modelValue, viewValue, ctrl.noop);
 	  }	  
   };
-  
-  
-  $scope.members = ['fraserxu', 'Fraser', 'github', 'ng-textcomplete', 'jquery', 'wiredcraft', 'devops'];
 	 
 }]);

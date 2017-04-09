@@ -40,14 +40,11 @@ myApp.directive('jsonText', function() {
     return {
         restrict: 'EA',
         scope: {
-            members: '=',
-			model: '=',
-            message: '='
+            model: '='
         },
-        template: '<textarea ng-model=\'message\' type=\'text\'></textarea>',
+        template: '<textarea ng-model=\'model.currentjson\' type=\'text\'></textarea>',
         link: function(scope, iElement, iAttrs) {
 
-            var mentions = scope.members;
             var ta = iElement.find('textarea');
             var textcomplete = new Textcomplete(ta, [
               {
@@ -67,7 +64,7 @@ myApp.directive('jsonText', function() {
             $(textcomplete).on({
               'textComplete:select': function (e, value) {
                 scope.$apply(function() {
-                  scope.message = value
+                  scope.model.currentjson = value
                 })
               },
               'textComplete:show': function (e) {
