@@ -11,28 +11,24 @@ myApp.directive('dynamic', function ($compile) {
   };
 });
 
-myApp.directive('jsonText', function() {
+myApp.directive('hasid', function() {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function(scope, element, attr, ngModel) {
+        link: function(scope, element, attr, ctrl) {
 		 /* désactive la validation pour les objects avec tableau qui n'ont pas d'ID */
-		 ngModel.$validators.id = function(value) {
-      // nsole.log(value);
+		 ctrl.$validators.hasid = function(value) {
 			if (value == undefined) {
 				return true;
 			} else {
-				return value.hasOwnProperty("id");
+				try {
+					var obj = JSON.parse(value);
+				} catch (Ex) {
+					return false;
+				}
+				return obj.hasOwnProperty("id");
 			}
 		 };
-		 function into(input) {
-			return JSON.parse(input);
-          };
-          function out(data) {
-            return JSON.stringify(data, null, 2);
-          };
-          ngModel.$parsers.push(into);
-          ngModel.$formatters.push(out);
         }
     };
 })
@@ -42,7 +38,7 @@ myApp.directive('jsonText', function() {
         scope: {
             model: '='
         },
-        template: '<textarea ng-model=\'model.currentjson\' type=\'text\'></textarea>',
+        template: '<textarea ng-model=\'model.currentjson\' name=\'jsonitem\' type=\'text\' hasid></textarea>',
         link: function(scope, iElement, iAttrs) {
 
             var ta = iElement.find('textarea');

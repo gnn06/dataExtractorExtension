@@ -171,9 +171,13 @@ myApp.controller('dataCtrl',
     }
   };
 
+  /**
+   *  lance une recherche amazon avec le titre de tous les items
+   */   
   $scope.searchAll = function () {
     var BP = chrome.extension.getBackgroundPage();
     var mainWindow = BP.mainWindow;
+	// TODO amazon en dur
     storage.readCode($scope.dataSource, "amazonsmartphone", function(result) {
       var newURL = result.searchurlpattern;
       for (let i = 0; i < $scope.model.items.length; i++) {
