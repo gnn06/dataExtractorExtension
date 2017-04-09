@@ -41,6 +41,7 @@ myApp.directive('jsonText', function() {
         restrict: 'EA',
         scope: {
             members: '=',
+			model: '=',
             message: '='
         },
         template: '<textarea ng-model=\'message\' type=\'text\'></textarea>',
@@ -52,8 +53,8 @@ myApp.directive('jsonText', function() {
               {
                 match: /("id"\s*:\s*)(\w*)$/,
                 search: function(term, callback) {
-                    callback($.map(mentions, function(mention) {
-                        return mention.toLowerCase().indexOf(term.toLowerCase()) === 0 ? mention : null;
+                    callback($.map(scope.model.items, function(item) {
+                        return item.id.toLowerCase().indexOf(term.toLowerCase()) === 0 ? item.id : null;
                     }));
                 },
                 index: 2,

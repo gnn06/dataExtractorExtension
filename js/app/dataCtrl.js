@@ -264,7 +264,5 @@ myApp.controller('dataCtrl',
   
   
   $scope.members = ['fraserxu', 'Fraser', 'github', 'ng-textcomplete', 'jquery', 'wiredcraft', 'devops'];
-  
-  $scope.message = "rxrt";
 	 
 }]);
