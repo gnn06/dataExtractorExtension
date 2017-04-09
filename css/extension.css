@@ -10,6 +10,9 @@
 	padding: 4px;
 }
 
+.textcomplete-wrapper {
+	width : 100%;
+}
 textarea {
 	font-family: monospace;
 	width:100%;

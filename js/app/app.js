@@ -1,4 +1,4 @@
-var myApp = angular.module('dataExtractorApp', ["ngMessages", "ngRoute", 'ui.bootstrap']);
+var myApp = angular.module('dataExtractorApp', ["ngMessages", "ngRoute", 'ngTextcomplete']);
 
 myApp.config(function($routeProvider, $locationProvider) {
   $routeProvider

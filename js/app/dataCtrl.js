@@ -35,8 +35,7 @@ myApp.controller('dataCtrl',
   $scope.view = function (item) {
 	  var index = indexOfItem(item);
 	  $scope.model.currentIndex = index;
-	  $scope.model.currentItem = {};
-	  angular.copy($scope.model.items[index], $scope.model.currentItem);
+	  $scope.message = JSON.stringify($scope.model.items[index], null, 2);
   };
 
   $scope.open = function (index) {
@@ -50,12 +49,12 @@ myApp.controller('dataCtrl',
 
   $scope.commit = function () {
 	  if ($scope.model.currentIndex != -1) {
-			angular.copy($scope.model.currentItem, $scope.model.items[$scope.model.currentIndex]);
+			$scope.model.items[$scope.model.currentIndex] = JSON.parse($scope.message);
 	  } else {
 			if ($scope.model.items == undefined) {
 				$scope.model.items = new Array();
 			}
-			$scope.model.items.push($scope.model.currentItem);
+			$scope.model.items.push(JSON.parse($scope.message));
 			$scope.model.currentIndex = $scope.model.items.length - 1;
 	  }
 	  $scope.IOmessage = "commited";
@@ -78,11 +77,12 @@ myApp.controller('dataCtrl',
 
   $scope.extract = function () {
 	   extract(function(result){
-			if ($scope.model.currentItem != null && $scope.model.currentItem.url != null && result.url != $scope.model.currentItem.url){
+			if ($scope.model.currentIndex != undefined && $scope.model.currentIndex != -1 &&
+                result.url != $scope.model.items[$scope.model.currentIndex].url){
 				alert('La page courante ne correspond pas à la source de la donnée courante.');
 				return;
 			}
-			$scope.model.currentItem = result;
+			$scope.message = JSON.stringify(result, null, 2);
 			$scope.$apply();
 		})
   };
@@ -134,7 +134,7 @@ myApp.controller('dataCtrl',
               console.log('refresh for ' + url);
               if ($scope.model.currentIndex == index) {
                 console.log('ui refresh');
-                $scope.model.currentItem = temp;
+                $scope.message = JSON.stringify(temp, null, 2);
                 $scope.$apply();
               }
             }
@@ -161,7 +161,7 @@ myApp.controller('dataCtrl',
             console.log('refresh for ' + newURL);
             if ($scope.model.currentIndex == i) {
               console.log('ui refresh');
-              $scope.model.currentItem = temp;
+              $scope.message = JSON.stringify(temp, null, 2);
               $scope.$apply();
             }
             chrome.tabs.remove([tabid]);
@@ -191,7 +191,7 @@ myApp.controller('dataCtrl',
 
   $scope.create = function () {
 	$scope.model.currentIndex = -1;
-	$scope.model.currentItem = undefined;
+	$scope.message = "";
   };
 
   /* initialise items and template */
@@ -261,4 +261,10 @@ myApp.controller('dataCtrl',
 		ctrl.$$runValidators(modelValue, viewValue, ctrl.noop);
 	  }	  
   };
+  
+  
+  $scope.members = ['fraserxu', 'Fraser', 'github', 'ng-textcomplete', 'jquery', 'wiredcraft', 'devops'];
+  
+  $scope.message = "rxrt";
+	 
 }]);

@@ -40,12 +40,11 @@
 
 <form name="myForm" novalidate>
     <div class="form-group">
-		<input ng-change="refreshJsonArea()" type="text" name="id" class="form-control" id="id" placeholder="Identifiant" ng-model="model.currentItem.id">
 		<label for="jsonArea">JSON</label>
-		<textarea type="textarea" name="jsonArea" id="jsonArea"
-			  ng-model='model.currentItem'
-			  ng-model-options="{ allowInvalid: true }"
-			  json-text placeholder="Cliquez sur Extraire ..."> </textarea>
+		
+	     <textcomplete id="" members='members' message='message'
+			rows="5"
+			placeholder="Cliquez sur Extraire ..." spellcheck="false"></textcomplete>
 	</div>
 	<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"
 		   ng-disabled="myForm.$invalid"/>
