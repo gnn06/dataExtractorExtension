@@ -1,0 +1,25 @@
+{
+  "name": "dataExtractorExtension",
+  "homepage": "https://github.com/gnn06/dataExtractorExtension",
+  "authors": [
+    "gilles orsini <gilles.orsini@gmail.com>"
+  ],
+  "description": "chrome extension to extract web data",
+  "main": "popup.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-messages": "^1.6.4",
+    "ng-textcomplete": "^0.6.0",
+    "bootstrap": "^3.3.7",
+    "angular-route": "^1.6.4",
+    "jquery": "^3.2.1"
+  }
+}
