@@ -41,10 +41,12 @@
 <form name="myForm" novalidate>
     <div class="form-group">
 		<label for="jsonArea">JSON</label>
-		
-	     <textcomplete id="" model='model'
-			rows="5"
-			placeholder="Cliquez sur Extraire ..." spellcheck="false"></textcomplete>
+		<textarea name="jsonitem" type="text"
+		          ng-model="model.currentjson" 
+		          textcomplete textcomplete-item-list="model.items" textcomplete-value-property="id"
+				  hasid
+				  rows="5"
+				  placeholder="Cliquez sur Extraire ..." spellcheck="false"></textarea>
 	</div>
 
 	<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"

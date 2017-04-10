@@ -35,19 +35,22 @@ myApp.directive('hasid', function() {
 .directive('textcomplete', ['Textcomplete', function(Textcomplete) {
     return {
         restrict: 'EA',
-        scope: {
-            model: '='
-        },
-        template: '<textarea ng-model=\'model.currentjson\' name=\'jsonitem\' type=\'text\' hasid></textarea>',
-        link: function(scope, iElement, iAttrs) {
+		require: 'ngModel',
+		scope : {
+			itemList : '=textcompleteItemList',
+			idProperty : '@textcompleteValueProperty',
+			model: '=ngModel'
+		},
+        link: function(scope, iElement, iAttrs, ngModel) {
 
-            var ta = iElement.find('textarea');
+            var ta = iElement;
             var textcomplete = new Textcomplete(ta, [
               {
                 match: /("id"\s*:\s*)(\w*)$/,
                 search: function(term, callback) {
-                    callback($.map(scope.model.items, function(item) {
-                        return item.id.toLowerCase().indexOf(term.toLowerCase()) === 0 ? item.id : null;
+					callback($.map(scope.itemList, function(item) {
+						var val = item[scope.idProperty];
+                        return val.toLowerCase().indexOf(term.toLowerCase()) === 0 ? val : null;
                     }));
                 },
                 index: 2,
@@ -60,7 +63,7 @@ myApp.directive('hasid', function() {
             $(textcomplete).on({
               'textComplete:select': function (e, value) {
                 scope.$apply(function() {
-                  scope.model.currentjson = value
+                  scope.model = value;
                 })
               },
               'textComplete:show': function (e) {
