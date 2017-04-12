@@ -2,3 +2,4 @@
 3rdparty
 *.zip
 /bower_components
+/node_modules
