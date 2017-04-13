@@ -22,7 +22,7 @@ myApp.factory('injector', function() {
       code += codeToInject;
       code += "chrome.runtime.sendMessage(result);";
       /* jquery.min.js doit être à la racine de l'extension */
-      chrome.tabs.executeScript(tabid, {file : 'js/lib/jquery.min.js'}, function() {
+      chrome.tabs.executeScript(tabid, {file : 'js/contentscript/jquery.min.js'}, function() {
         chrome.tabs.executeScript(tabid, {
           code: code
         })
