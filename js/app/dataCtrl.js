@@ -60,7 +60,13 @@ myApp.controller('dataCtrl',
 	  $scope.IOmessage = "commited";
   };
 
-  function extract(callback) {
+  /**
+    * Extrait l'onglet en cours.
+	* Uniquement si objet courant est celui de la page courante
+	* Pas de merge. Ecrase l'objet courant. Ne modifie pas les items (besoin d'un commit).
+	* Si aucun extractor dispo, fait une extraction manuelle.
+	*/
+  $scope.extract = function () {
     var BP = chrome.extension.getBackgroundPage();
   	var mainWindow = BP.mainWindow;
   	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
@@ -68,18 +74,15 @@ myApp.controller('dataCtrl',
 	  var tabid = tab[0].id;
 	  storage.readCodeByURL($scope.dataSource, url, function(result) {
 		if (result == null) {
-            result = { code : "" };
-        }
+			/* si aucun extractor trouvé, génère juste un objet avec l'url */
+            result = { url : url };
+		    $scope.model.currentjson = JSON.stringify(result, null, 2);
+			$scope.$apply();
+        } else {
 		injector.extract(result.code, mainWindow, tabid, function(result){
 		  result.url = url;
-		  callback(result);
-		});
-	  });
-	});
-  }
-
-  $scope.extract = function () {
-	   extract(function(result){
+				// TODO quid si l'objet est déjà extrait (merge ? écrasement ?)
+				/* si objet extrait est celui en cours de visu alors stoppe le process */
 			if ($scope.model.currentIndex != undefined && $scope.model.currentIndex != -1 &&
                 result.url != $scope.model.items[$scope.model.currentIndex].url){
 				alert('La page courante ne correspond pas à la source de la donnée courante.');
@@ -87,9 +90,17 @@ myApp.controller('dataCtrl',
 			}
 			$scope.model.currentjson = JSON.stringify(result, null, 2);
 			$scope.$apply();
-		})
+			});
+		}
+	  });
+	});
   };
 
+  /**
+    * Lancer une extraction de tous les onglets ouverts.
+	* Si l'onglet a déjà été extrait, ne fait rien.
+	* Les objets sont crés AVEC un id demandé en live.
+	*/
   $scope.extractTabs = function () {
     var BP = chrome.extension.getBackgroundPage();
     var mainWindow = BP.mainWindow;
@@ -97,7 +108,11 @@ myApp.controller('dataCtrl',
       for (var i = 0; i < tabs.length; i++) {
         let url = tabs[i].url;
     	  let tabid = tabs[i].id;
+		var index = searchItemByURL(url);
+		// si item déjà extrait, on ne fait rien. Pas possible d'avoir deux item avec la même url
+		if (index == -1) {
     	  storage.readCodeByURL($scope.dataSource, url, function(result) {
+			  if (result != null) {
       		injector.extract(result.code, mainWindow, tabid, function(result){
             result.url = url;
             var id = prompt("id à utiliser ?" + result.titre);
@@ -105,7 +120,11 @@ myApp.controller('dataCtrl',
             $scope.model.items.push(result);
       			$scope.$apply();
       		});
+			  }
     	  });
+		} else {
+			console.error('extract aborted, url already');
+      }
       }
     });
   };
@@ -120,6 +139,10 @@ myApp.controller('dataCtrl',
     return -1;
   }
 
+  /**
+    * Lance un rafraichissement pour tous les onglets ouverts
+	* Les onglets qui n'ont pas déjà été extraits ne le sont pas.
+	*/
   $scope.refreshTabs = function () {
     var BP = chrome.extension.getBackgroundPage();
     var mainWindow = BP.mainWindow;
@@ -147,6 +170,9 @@ myApp.controller('dataCtrl',
     });
   };
 
+  /**
+    * lance un rafraichissement pour tous les items (filtrage non pris en compte)
+	*/
   $scope.refreshAll = function () {
     var BP = chrome.extension.getBackgroundPage();
     var mainWindow = BP.mainWindow;
@@ -175,12 +201,12 @@ myApp.controller('dataCtrl',
   };
 
   /**
-   *  lance une recherche amazon avec le titre de tous les items
+   *  lance une recherche amazon avec le titre de tous les items (filtrage non pris en compte)
    */   
   $scope.searchAll = function () {
     var BP = chrome.extension.getBackgroundPage();
     var mainWindow = BP.mainWindow;
-	// TODO amazon en dur
+	// TODO amazon en dur et item.titre en dur
     storage.readCode($scope.dataSource, "amazonsmartphone", function(result) {
       var newURL = result.searchurlpattern;
       for (let i = 0; i < $scope.model.items.length; i++) {
