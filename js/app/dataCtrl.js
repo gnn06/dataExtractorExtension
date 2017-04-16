@@ -1,7 +1,7 @@
 myApp.controller('dataCtrl',
   ["$scope", "$compile", "storage", "$routeParams", '$timeout',
-   'injector', 'merge',
-  function ($scope, $compile, storage, $routeParams, $timeout, injector, merge) {
+   'injector', 'merge', "$uibModal", "$log", "$document",
+  function ($scope, $compile, storage, $routeParams, $timeout, injector, merge, $uibModal, $log, $document) {
 
   $scope.dataSource = $routeParams.univer;
   // currentIndex = -1 permet d'ajouter immédiatement un item à la liste
@@ -201,18 +201,20 @@ myApp.controller('dataCtrl',
   };
 
   /**
-   *  lance une recherche amazon avec le titre de tous les items (filtrage non pris en compte)
-   */   
-  $scope.searchAll = function () {
+   *  lance une recherche pour le searcher (string) fourni et evalue
+   * l'expression fournie comme terme de recherche (filtrage non pris en compte)
+   */
+  $scope.searchAll = function (searchOptions) {
     var BP = chrome.extension.getBackgroundPage();
     var mainWindow = BP.mainWindow;
-	// TODO amazon en dur et item.titre en dur
-    storage.readCode($scope.dataSource, "amazonsmartphone", function(result) {
+    storage.readSearcher($scope.dataSource, searchOptions.searcher, function(result) {
       var newURL = result.searchurlpattern;
       for (let i = 0; i < $scope.model.items.length; i++) {
         chrome.tabs.create({ url: newURL }, function(tab) {
           var tabid = tab.id;
-          var toSearch = $scope.model.items[i].titre;
+          var item = $scope.model.items[i];
+          // TODO gérer le cas où l'expression est invalide
+          var toSearch = $scope.$eval(searchOptions.property, {item : item});
           var codeToInject = result.searchCode.repeat(1);
           codeToInject = codeToInject.replace("SEARCH", toSearch);
           injector.extract(codeToInject, mainWindow, tabid, function(result) {
@@ -233,7 +235,7 @@ myApp.controller('dataCtrl',
   $scope.$watch("model.items", $scope.merge, true);
 
   var savePromiseItems = null;
-  
+
   /**
    * obsolète, utile pour sauvegarde manuelle versus automatique
    */
@@ -247,7 +249,7 @@ myApp.controller('dataCtrl',
 		}
 	});
   };
-  
+
   $scope.$watch("model.items", function() {
       if (savePromiseItems != null)  {
 		   $timeout.cancel(savePromiseItems);
@@ -264,7 +266,7 @@ myApp.controller('dataCtrl',
 		  });
 	}, 3000, false);
   }, true);
-  
+
   $scope.refreshJsonArea = function () {
 	  console.log("dans refreshJsonArea");
 	  var ctrl = $scope.myForm.jsonArea;
@@ -274,13 +276,13 @@ myApp.controller('dataCtrl',
       /** détermine la viewValue pour la modelValue actuelle.
 	   *  Si different alors la view est désynchro, un refresh graphique est nécessaire.
 	   *  Le controller de la jsonArea a pu être changé par l'input de l'ID.
-	   *	 
+	   *
 	   *  Le listerner ngChange est lancé :
 	   *    - après que le controller et le scope aient été mis à jour
-	   *    - avant les $watch.		  
-	   *	  
+	   *    - avant les $watch.
+	   *
 	   *  Copier-Coller de ngModelController.$watch
-	   */	   
+	   */
 	  var formatters = ctrl.$formatters,
           idx = formatters.length;
 
@@ -292,54 +294,50 @@ myApp.controller('dataCtrl',
         ctrl.$viewValue = ctrl.$$lastCommittedViewValue = viewValue;
         ctrl.$render();
 		ctrl.$$runValidators(modelValue, viewValue, ctrl.noop);
-	  }	  
+	  }
   };
-	 
-}]);
 
-
-myApp.controller('ModalDemoCtrl', function ($uibModal, $log, $document) {
-  var $ctrl = this;
-  $ctrl.items = ['item1', 'item2', 'item3'];
-
-  $ctrl.animationsEnabled = true;
-
-  $ctrl.open = function (size, parentSelector) {
-    var parentElem = parentSelector ? 
+  $scope.openModalSearcher = function (size, parentSelector) {
+    var parentElem = parentSelector ?
       angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
     var modalInstance = $uibModal.open({
-      animation: $ctrl.animationsEnabled,
+      animation: true,
       ariaLabelledBy: 'modal-title',
       ariaDescribedBy: 'modal-body',
       templateUrl: 'myModalContent.html',
       controller: 'ModalInstanceCtrl',
       controllerAs: '$ctrl',
-      size: size,
+      size: "",
       appendTo: parentElem,
       resolve: {
         items: function () {
-          return $ctrl.items;
+          return $scope.model.items;
+        },
+        univer: function () {
+          return $scope.dataSource;
         }
       }
     });
-
-    modalInstance.result.then(function (selectedItem) {
-      $ctrl.selected = selectedItem;
+    modalInstance.result.then(function (result) {
+      $scope.searchAll(result);
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
     });
   };
-});
 
-myApp.controller('ModalInstanceCtrl', function ($uibModalInstance, items) {
+}]);
+
+myApp.controller('ModalInstanceCtrl', function ($uibModalInstance, items, univer, storage, $scope) {
   var $ctrl = this;
   $ctrl.items = items;
-  $ctrl.selected = {
-    item: $ctrl.items[0]
-  };
+  $ctrl.property = "item.titre";
+
+  storage.readSearcherList(univer, function (result) {
+    $ctrl.items = result;
+  });
 
   $ctrl.ok = function () {
-    $uibModalInstance.close($ctrl.selected.item);
+    $uibModalInstance.close({ searcher : $ctrl.selectedSearcher, property : $ctrl.property });
   };
 
   $ctrl.cancel = function () {

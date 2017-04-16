@@ -28,7 +28,8 @@
 	<input id="extracttabsbutton" type="button" class="btn btn-default" value="Extraire onglets" ng-click="extractTabs()" />
 	<input id="refreshtabsbutton" type="button" class="btn btn-default" value="Réactualiser onglets" ng-click="refreshTabs()" />
 	<input id="refreshallbutton" type="button" class="btn btn-default" value="Réactualiser tout" ng-click="refreshAll()" />
-	<input id="searchbutton" type="button" class="btn btn-default" value="Chercher tout" title="lance une recherche amazon avec le titre de tous les items" ng-click="searchAll()" />
+	<input id="searchbutton" type="button" class="btn btn-default" value="Chercher tout ..."
+				title="lance une recherche amazon avec le titre de tous les items" ng-click="openModalSearcher()" />
 	<span ng-show="model.currentIndex == -1">Nouvelle donnée</span>
 	<span ng-show="myForm.$dirty">Sauvegarde nécessaire</span>
 	<span ng-show="writeSuccess && myForm.$pristine">Modification sauvegardée</span>
@@ -42,7 +43,7 @@
     <div class="form-group">
 		<label for="jsonArea">JSON</label>
 		<textarea name="jsonitem" type="text"
-		          ng-model="model.currentjson" 
+		          ng-model="model.currentjson"
 		          textcomplete textcomplete-item-list="model.items" textcomplete-value-property="id"
 				  hasid
 				  rows="5"
@@ -53,24 +54,28 @@
 		   ng-disabled="myForm.$invalid"/>
 </form>
 
-<div ng-controller="ModalDemoCtrl as $ctrl" class="modal-demo">
+<div class="modal-demo">
 	<script type="text/ng-template" id="myModalContent.html">
 		<div class="modal-header">
-			<h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+			<h3 class="modal-title" id="modal-title">Lancer une recherche sur tous les items</h3>
 		</div>
 		<div class="modal-body" id="modal-body">
-			<ul>
-				<li ng-repeat="item in $ctrl.items">
-					<a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
-				</li>
-			</ul>
-			Selected: <b>{{ $ctrl.selected.item }}</b>
+				<div class="form-group">
+					<label for="jsonArea">Choisir un searcher :</label>
+					<ul class="list-group">
+						<li ng-repeat="item in $ctrl.items"
+					    	class="list-group-item" ng-class="{active : item == $ctrl.selectedSearcher}" ng-click="$event.preventDefault(); $ctrl.selectedSearcher = item">{{ item }}</li>
+					</ul>
+				</div>
+				<div class="form-group">
+					<label for="jsonArea">Expression à évaluer comme terme de recherche :</label>
+					<input type="text" class="form-control" placeholder="item.titre" ng-model="$ctrl.property" required>
+				</div>
+				<span id="helpBlock" class="help-block">L'expression doit être basée sur la variable item.</span>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+			<button class="btn btn-primary" type="button" ng-disabled="!$ctrl.selectedSearcher || !$ctrl.property" ng-click="$ctrl.ok()">OK</button>
 			<button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
 		</div>
 	</script>
-	{{ $ctrl.selected }}
-	<button type="button" class="btn btn-default" ng-click="$ctrl.open()">Open me!</button>
 </div>
