@@ -28,6 +28,6 @@ textarea {
 }
 
 #datatable {
-	max-height: 50%;
-	overflow: scroll;
+	max-height: 30%;
+	overflow-y: scroll;
 }
