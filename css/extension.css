@@ -1,3 +1,21 @@
+.navbar {
+	margin-bottom: 0px;
+}
+
+.navbar-default {
+	background-color: #d9ebff;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	background-color: rgb(169, 201, 242);
+}
+
+h3 {
+	background-color: rgb(169, 201, 242);
+    padding: 6 12;
+    border-radius: 3px;
+}
+
 #dataSourceInput {
 	width: 100px;
 }

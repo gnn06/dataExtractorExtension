@@ -1,30 +1,32 @@
-<p>Données</p>
+<div>
+	<h3>Données</h3>
 
-<input type="text" name="searchText" class="form-control" id="searchText" placeholder="Filtre" ng-model="searchText">
-<div id="datatable" class="form-group">
-<table class="table table-condensed" id="item-list" style="max-height:100px">
-	<thead>
-		<tr>
-			<th>Site</th>
-			<th>Id</th>
-			<th>Action</th>
+	<input type="text" name="searchText" class="form-control" id="searchText" placeholder="Filtre" ng-model="searchText">
+	<div id="datatable" class="form-group">
+	<table class="table table-condensed" id="item-list" style="max-height:100px">
+		<thead>
+			<tr>
+				<th>Site</th>
+				<th>Id</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<!-- tracking neeeded to make add working -->
+		<tr ng-repeat="item in model.items | filter : searchText track by item.url">
+			<td>{{ item.url | domain }}</td>
+			<td>{{ item.id }}</td>
+			<td>
+				<a href ng-click="view(item)" >json</a>
+				<a href="{{ item.url }}" target="_blank"><i class="glyphicon  glyphicon-globe"></i></a>
+				<a href ng-click="delete(item)" ><i class="glyphicon  glyphicon-trash"></i></a>
+			</td>
 		</tr>
-	</thead>
-	<!-- tracking neeeded to make add working -->
-	<tr ng-repeat="item in model.items | filter : searchText track by item.url">
-		<td>{{ item.url | domain }}</td>
-		<td>{{ item.id }}</td>
-		<td>
-			<a href ng-click="view(item)" >json</a>
-			<a href="{{ item.url }}" target="_blank"><i class="glyphicon  glyphicon-globe"></i></a>
-			<a href ng-click="delete(item)" ><i class="glyphicon  glyphicon-trash"></i></a>
-		</td>
-	</tr>
-</table>
+	</table>
+	</div>
 </div>
 
 <div class="form-group">
-	<input id="extractbutton" type="button" class="btn btn-default" value="Ajouter une donnée" ng-click="create()" />
+	<input id="extractbutton" type="button" class="btn btn-default" value="Nouvelle donnée" ng-click="create()" />
 	<input id="extractbutton" type="button" class="btn btn-default" value="Extraire" ng-click="extract()" />
 	<input id="extracttabsbutton" type="button" class="btn btn-default" value="Extraire onglets" ng-click="extractTabs()" />
 	<input id="refreshtabsbutton" type="button" class="btn btn-default" value="Réactualiser onglets" ng-click="refreshTabs()" />
@@ -33,9 +35,9 @@
 				title="lance une recherche amazon avec le titre de tous les items" ng-click="openModalSearcher()" />
 </div>
 
+<h3>Objet courant</h3>
 <form name="myForm" novalidate>
     <div class="form-group">
-		<label for="jsonArea">JSON</label>
 		<textarea name="jsonitem" type="text"
 		          ng-model="model.currentjson"
 		          textcomplete textcomplete-item-list="model.items" textcomplete-value-property="id"

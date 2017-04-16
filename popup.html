@@ -1,28 +1,28 @@
-<html ng-app="dataExtractorApp" ng-Csp>	
+<html ng-app="dataExtractorApp" ng-Csp>
   <head>
-	
-	
+
+
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-	
+
 	<link rel="stylesheet" href="bower_components/angular/angular-csp.css" media="screen">
 	<link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css" media="screen">
-	
+
 	<link rel="stylesheet" href="css/extension.css" media="screen">
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-	
-	
-	
-	
+
+
+
+
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-route/angular-route.min.js"></script>
 	<script src="bower_components/angular-messages/angular-messages.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
-	
+
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-	<script src="bower_components/ng-textcomplete/ng-textcomplete.js"></script>	
-	
+	<script src="bower_components/ng-textcomplete/ng-textcomplete.js"></script>
+
     <script src="js/app/app.js"></script>
 	<script src="js/app/storage.js"></script>
 	<script src="js/app/merge.js"></script>
@@ -35,9 +35,9 @@
 	<script src="js/app/headerCtrl.js"></script>
 	<script src="js/app/extractorCtrl.js"></script>
 	<script src="js/app/searcherCtrl.js"></script>
-	
-	
-	
+
+
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
@@ -53,7 +53,7 @@
 			<li ng-class="$route.current.templateUrl == 'view/data.html' ? 'active' : ''"><a href="#!/univers/{{$routeParams.univer}}/data">Données</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/template.html' ? 'active' : ''"><a href="#!/univers/{{$routeParams.univer}}/template">Template</a></li>
 			<li ng-class="$route.current.templateUrl == 'view/extractors.html' || $route.current.templateUrl == 'view/extractor.html' ? 'active' : ''"><a href="#!/univers/{{$routeParams.univer}}/extractors">Extracteurs</a></li>
-			<li ng-class="$route.current.templateUrl == 'view/searchers.html' || $route.current.templateUrl == 'view/search.html' ? 'active' : ''"><a href="#!/univers/{{$routeParams.univer}}/searchers">Searchers</a></li>
+			<li ng-class="$route.current.templateUrl == 'view/searchers.html' || $route.current.templateUrl == 'view/searcher.html' ? 'active' : ''"><a href="#!/univers/{{$routeParams.univer}}/searchers">Searchers</a></li>
 		  </ul>
 		</div>
 	  </div>
