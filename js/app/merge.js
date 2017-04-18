@@ -1,11 +1,21 @@
 myApp.factory('merge', function() {
     var service = {
+        /**
+          * seule méthode utilisée par la UI.
+          * @param []
+          * @return merged collection
+          * 1) Pour les items avec une propriété item de type tableau, la sous-collection
+          *    est ajoutée à la fin de la collection. L'item n'est pas mergé. L'item
+          *    est supprimé de la collection.
+          * 2) Si deux items ont le même ID, le second est mergé au premier.
+          *    le second est supprimé de la liste.
+          */
         mergeCollection : function (collection) {
             var result = angular.copy(collection);
-            // second, merge all subitems.
+            //
             for (var k  = 0; k < result.length; k++) {
                 var item3 = result[k];
-				// TODO gérer le nom de la propriète contenant les items
+				        // TODO gérer le nom de la propriète contenant les items
                 if (item3.hasOwnProperty("items") && angular.isArray(item3.items)) {
                     result = result.concat(item3.items);
                     result.splice(k, 1);
