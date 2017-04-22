@@ -32,7 +32,7 @@ myApp.directive('hasid', function() {
         }
     };
 })
-.directive('textcomplete', ['Textcomplete', function(Textcomplete) {
+.directive('textcomplete', ['Textcomplete', 'modelService', function(Textcomplete, modelService) {
     return {
         restrict: 'EA',
 		require: 'ngModel',
@@ -48,14 +48,32 @@ myApp.directive('hasid', function() {
               {
                 match: /("id"\s*:\s*)(\w*)$/,
                 search: function(term, callback) {
-					callback($.map(scope.itemList, function(item) {
-						var val = item[scope.idProperty];
-                        return val.toLowerCase().indexOf(term.toLowerCase()) === 0 ? val : null;
-                    }));
+                  var ids = modelService.getId(scope.itemList);
+                  callback($.map(ids, function (word) {
+                    return word.indexOf(term) === 0 ? word : null;
+                  }));
+					        // callback($.map(scope.itemList, function(item) {
+						      //   var val = item[scope.idProperty];
+                  //   return val.toLowerCase().indexOf(term.toLowerCase()) === 0 ? val : null;
+                  // }));
                 },
                 index: 2,
                 replace: function(mention) {
                     return '$1"' + mention + '"';
+                }
+              },
+              {
+                match: /("items"\s*:\s*\[\s*(?:"\w+",\s*)*)(\w*)$/,
+                search: function(term, callback) {
+                  var ids = modelService.getId(scope.itemList);
+                  callback($.map(ids, function (word) {
+                    return word.indexOf(term) === 0 ? word : null;
+                  }));
+                },
+                index:2,// la sous-expression a transmettre à search
+                replace : function (mention) {
+                  // la sous-expression utilisée par string.replace dans la partie pre
+                  return '$1"' + mention + '"';
                 }
               }
             ]);

@@ -1,7 +1,7 @@
 myApp.factory('merge', function() {
     var service = {
         /**
-          * seule méthode utilisée par la UI.
+          *
           * @param []
           * @return merged collection
           * 1) Pour les items avec une propriété item de type tableau, la sous-collection
@@ -12,17 +12,20 @@ myApp.factory('merge', function() {
           */
         mergeCollection : function (collection) {
             var result = angular.copy(collection);
-            //
+
             for (var k  = 0; k < result.length; k++) {
-                var item3 = result[k];
+                var parentItem = result[k];
 				        // TODO gérer le nom de la propriète contenant les items
-                if (item3.hasOwnProperty("items") && angular.isArray(item3.items)) {
-                    result = result.concat(item3.items);
+                if (parentItem.hasOwnProperty("items") && angular.isArray(parentItem.items)) {
+                    for (var l = 0; l < parentItem.items.length; l++) {
+                        var subItem = this.mergeSubItem(parentItem.items[l], parentItem.id, l + 1);
+                        result = result.concat(subItem);
+                    }
                     result.splice(k, 1);
                     k--;
                 }
             }
-            // first, take a collection and merge all of her items that have same id
+
             var found = false;
             for (var i  = 0; i < result.length - 1; i++) {
                 var item1 = result[i];
@@ -38,6 +41,18 @@ myApp.factory('merge', function() {
             return result;
         },
 
+        mergeSubItem (subItem, parentId, index) {
+          var result = {};
+          if (typeof subItem == "string") {
+            result["id"] = subItem;
+          }
+          result[parentId] = index;
+          return result;
+        },
+
+        /**
+          * @obsolete
+          */
         mergeItemCollection : function (itemToMerge, collection) {
             var found = false;
             for (var i  = 0; i < collection.length; i++) {
@@ -60,6 +75,9 @@ myApp.factory('merge', function() {
             return item1;
         },
 
+        /**
+         * utilisé pour rafraichir les objets.
+         */
         refresh : function (dst, src) {
             for (var attrname in src) {
                 dst[attrname] = src[attrname];
@@ -67,6 +85,9 @@ myApp.factory('merge', function() {
             return dst;
         },
 
+        /**
+         * @obsolete
+         */
         mergeTwoCollections : function (callback) {
             var zeperfs = null;
             var autoplus = null;
