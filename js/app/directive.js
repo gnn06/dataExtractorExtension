@@ -94,3 +94,12 @@ myApp.directive('hasid', function() {
         }
     }
 }]);
+
+/*
+ * Use flte like this | intersect: 'frandroid_meilleurs_moins_5_pouces'
+ */
+myApp.filter('intersect', function () {
+  return function(input, property) {
+    return input.filter(function(element){return element.hasOwnProperty(property)});
+  };
+});
