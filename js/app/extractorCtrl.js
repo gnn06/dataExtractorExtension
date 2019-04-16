@@ -69,6 +69,15 @@ myApp.controller('extractorCtrl',
   		});
 	  });
 	};
+
+		$scope.copy = function () {
+			var text = "1	2	3\n4	5	6";
+			navigator.clipboard.writeText(text).then(function() {
+				console.log('Async: Copying to clipboard was successful!');
+			}, function(err) {
+				console.error('Async: Could not copy text: ', err);
+			});
+		};
   }]
 
 );
