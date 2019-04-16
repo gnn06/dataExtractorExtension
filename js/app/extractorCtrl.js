@@ -59,7 +59,8 @@ myApp.controller('extractorCtrl',
 	  chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
   		var codeToInject = $scope.extractor.code;
   		injector.extract(codeToInject, mainWindow, tab[0].id, function(result/*request, sender, sendResponse*/) {
-  		  $scope.resultJSON = result;
+				$scope.resultObject = result;
+				$scope.resultJSON = result;
   		  if ($scope.extractor.urlpattern == undefined) {
   		      $scope.extractor.urlexample = tab[0].url;
   		      $scope.extractor.urlpattern = tab[0].url;
@@ -71,12 +72,16 @@ myApp.controller('extractorCtrl',
 	};
 
 		$scope.copy = function () {
-			var text = "1	2	3\n4	5	6";
+			var text = objectToText($scope.resultJSON);
 			navigator.clipboard.writeText(text).then(function() {
 				console.log('Async: Copying to clipboard was successful!');
 			}, function(err) {
 				console.error('Async: Could not copy text: ', err);
 			});
+		};
+
+		objectToText = function(obj) {
+			return Object.values(obj).join("\t");
 		};
   }]
 
