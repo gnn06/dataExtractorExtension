@@ -4,7 +4,8 @@
   "description": "web data extraction chrome extension",
   "main": "popup.html",
   "dependencies": {
-    "grunt": "^1.0.1"
+    "grunt": "^1.0.1",
+    "voca": "^1.4.0"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
