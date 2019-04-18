@@ -85,7 +85,8 @@ myApp.controller('extractorCtrl',
 		};
 
 		$scope.analyse = function () {
-			console.log("goi");
+			var adData = extractItAd($scope.resultJSON.title + " " + $scope.resultJSON.text);
+			angular.merge($scope.resultJSON, adData);
 		};
 	}]
 
