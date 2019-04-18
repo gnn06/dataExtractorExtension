@@ -83,6 +83,10 @@ myApp.controller('extractorCtrl',
 		objectToText = function(obj) {
 			return Object.values(obj).join("\t");
 		};
-  }]
+
+		$scope.analyse = function () {
+			console.log("goi");
+		};
+	}]
 
 );
