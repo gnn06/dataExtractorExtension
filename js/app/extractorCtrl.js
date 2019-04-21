@@ -53,23 +53,26 @@ myApp.controller('extractorCtrl',
 	  });
 	};
 
-	$scope.extract = function () {
-	  var BP = chrome.extension.getBackgroundPage();
-	  var mainWindow = BP.mainWindow;
-	  chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
-  		var codeToInject = $scope.extractor.code;
-  		injector.extract(codeToInject, mainWindow, tab[0].id, function(result/*request, sender, sendResponse*/) {
+		function inject(codeToInject, func) {
+			var BP = chrome.extension.getBackgroundPage();
+			var mainWindow = BP.mainWindow;
+			chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
+				injector.extract(codeToInject, mainWindow, tab[0].id, func);
+			});
+		}
+
+		$scope.extract = function () {
+			inject($scope.extractor.code, function(result/*request, sender, sendResponse*/) {
 				$scope.resultObject = result;
 				$scope.resultJSON = result;
-  		  if ($scope.extractor.urlpattern == undefined) {
-  		      $scope.extractor.urlexample = tab[0].url;
-  		      $scope.extractor.urlpattern = tab[0].url;
-  		      $scope.$apply();
-  		  }
-  		  $scope.$apply();
-  		});
-	  });
-	};
+				if ($scope.extractor.urlpattern == undefined) {
+						$scope.extractor.urlexample = tab[0].url;
+						$scope.extractor.urlpattern = tab[0].url;
+						$scope.$apply();
+				}
+				$scope.$apply();
+			});
+		};
 
 		$scope.copy = function () {
 			var text = objectToText($scope.resultJSON);
@@ -85,8 +88,9 @@ myApp.controller('extractorCtrl',
 		};
 
 		$scope.analyse = function () {
-			var adData = extractItAd($scope.resultJSON.title + " " + $scope.resultJSON.text);
-			angular.merge($scope.resultJSON, adData);
+			var result = $scope.resultObject;
+			var words = splitWords($scope.resultObject.title + " " + $scope.resultObject.text);
+			eval($scope.extractor.codeAnalyse);
 		};
 	}]
 
