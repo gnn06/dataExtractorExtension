@@ -14,6 +14,8 @@
     <div class="form-group">
         <input id="extractbutton" type="button" class="btn btn-default" value="Tester extracteur" ng-click="extract()"
         ng-disabled="myForm.codeToInjectArea.$invalid"/>
+        <input id="analysebutton" type="button" class="btn btn-default" value="Tester l'analyse" ng-click="analyse()"/>
+        <input id="copybutton" type="button" class="btn btn-default" value="Copie le résultat" ng-click="copy()"/>
         <input type="button" class="btn btn-default" value="Sauver code" ng-click="write()"
             ng-disabled="myForm.$invalid"/>
         <a ng-hide="extractor.urlexample == undefined" href="{{extractor.urlexample}}" target="_blank">open example</a>
@@ -37,11 +39,6 @@
                   placeholder="result.property = 12;"
                   required
                   ng-model="extractor.codeAnalyse" ></textarea>
-    </div>
-
-    <div class="form-group">
-        <input id="analysebutton" type="button" class="btn btn-default" value="Analyse" ng-click="analyse()"/>
-        <input id="copybutton" type="button" class="btn btn-default" value="Copie" ng-click="copy()"/>
     </div>
 
     <div class="form-group">
