@@ -1,7 +1,7 @@
 myApp.controller('dataCtrl',
   ["$scope", "$compile", "storage", "$routeParams", '$timeout',
-   'injector', 'merge', "$uibModal", "$log", "$document",
-  function ($scope, $compile, storage, $routeParams, $timeout, injector, merge, $uibModal, $log, $document) {
+   'injector', 'merge', 'clipboard', "$uibModal", "$log", "$document",
+  function ($scope, $compile, storage, $routeParams, $timeout, injector, merge, clipboard, $uibModal, $log, $document) {
 
   $scope.dataSource = $routeParams.univer;
   // currentIndex = -1 permet d'ajouter immédiatement un item à la liste
@@ -60,6 +60,15 @@ myApp.controller('dataCtrl',
     $scope.IOmessage = "commited";
   };
 
+  $scope.copy = function () {
+    clipboard.copyPromise($scope.model.currentExtract, navigator)
+    .then(function() {
+      console.log('Async: Copying to clipboard was successful!');
+    }, function(err) {
+      console.error('Async: Could not copy text: ', err);
+    });
+  };
+
   /**
     * Extrait l'onglet en cours.
     * Uniquement si objet courant est celui de la page courante
@@ -72,14 +81,14 @@ myApp.controller('dataCtrl',
   	chrome.tabs.query({active:true, windowId : mainWindow}, function(tab) {
       var url = tab[0].url;
       var tabid = tab[0].id;
-      storage.readCodeByURL($scope.dataSource, url, function(result) {
-        if (result == null) {
+      storage.readCodeByURL($scope.dataSource, url, function(extractor) {
+        if (extractor == null) {
           /* si aucun extractor trouvé, génère juste un objet avec l'url */
           result = { url : url };
           $scope.model.currentjson = JSON.stringify(result, null, 2);
           $scope.$apply();
         } else {
-          injector.extract(result.code, mainWindow, tabid, function(result){
+          injector.extract(extractor.code, mainWindow, tabid, function(result){
             result.url = url;
             // TODO quid si l'objet est déjà extrait (merge ? écrasement ?)
             /* si objet extrait est celui en cours de visu alors stoppe le process */
@@ -89,7 +98,12 @@ myApp.controller('dataCtrl',
               alert('La page courante ne correspond pas à la source de la donnée courante.');
               return;
             }
+            if (extractor.codeAnalyse) {
+              var words = splitWords(result.title + " " + result.text);
+              eval(extractor.codeAnalyse);
+            }
             $scope.model.currentjson = JSON.stringify(result, null, 2);
+            $scope.model.currentExtract = result;
             $scope.$apply();
           });
         }

@@ -46,6 +46,8 @@
 				  placeholder="Cliquez sur Extraire ..." spellcheck="false"></textarea>
 	</div>
 
+	<input id="copybutton" type="button" class="btn btn-default" value="Copie" ng-click="copy()"/>
+
 	<input id="commitbutton" type="button" class="btn btn-default" value="Commit" ng-click="commit()"
 		   ng-disabled="myForm.$invalid"/>
 			 <span ng-show="model.currentIndex == -1">Nouvelle donnée</span>

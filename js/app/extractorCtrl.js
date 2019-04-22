@@ -23,8 +23,8 @@ myApp.controller('extractorListCtrl',
 }]);
 
 myApp.controller('extractorCtrl',
-  ["$scope", '$timeout', 'storage', '$routeParams', 'injector',
-  function ($scope, $timeout, storage, $routeParams, injector)
+  ["$scope", '$timeout', 'storage', 'clipboard', '$routeParams', 'injector',
+  function ($scope, $timeout, storage, clipboard, $routeParams, injector)
   {
     var oldId = null;
 
@@ -75,16 +75,12 @@ myApp.controller('extractorCtrl',
 		};
 
 		$scope.copy = function () {
-			var text = objectToText($scope.resultJSON);
-			navigator.clipboard.writeText(text).then(function() {
+			clipboard.copyPromise($scope.resultJSON, navigator)
+			.then(function() {
 				console.log('Async: Copying to clipboard was successful!');
 			}, function(err) {
 				console.error('Async: Could not copy text: ', err);
 			});
-		};
-
-		objectToText = function(obj) {
-			return Object.values(obj).join("\t");
 		};
 
 		$scope.analyse = function () {
