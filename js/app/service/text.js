@@ -83,7 +83,13 @@ function closedTo(array, indice, subjects) {
     return match;
 }
 
+function formatDate(text) {
+    // 21/04/2019 à 19h05
+    return text.replace(/(\d+)\/(\d+)\/(\d+) à (\d+)h(\d+)/,"$1/$2/$3 $4:$5");
+}
+
 exports.matchAny = matchAny;
 exports.splitWords = splitWords;
 exports.search = search;
 exports.closedTo = closedTo;
+exports.formatDate = formatDate;

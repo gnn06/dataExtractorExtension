@@ -18,5 +18,8 @@ describe('Array', function () {
         it('closedTo', function () {
             assert.equal(t.closedTo("aa bb cc dd ee ff gg hh ii jj kk ll mm nn oo pp qq", 10, ["hh"]), "hh");
         });
+        it('formatDate', function () {
+            assert.equal(t.formatDate("12/11/2019 à 14h23"), "12/11/2019 14:23");
+        });
     });
 });
