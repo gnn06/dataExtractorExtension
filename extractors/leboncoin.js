@@ -1,3 +1,5 @@
+https://www.leboncoin.fr/informatique/
+
 text = $(".content-CxPmi").html();
 result.title = $("div[data-qa-id='adview_spotlight_container'] div[data-qa-id='adview_title'] h1").text();
 result.prix = $("div[data-qa-id='adview_spotlight_container'] div[data-qa-id='adview_price'] > div > span").text();
